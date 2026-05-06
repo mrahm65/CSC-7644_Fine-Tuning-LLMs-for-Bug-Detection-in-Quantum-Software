@@ -1,2 +1,2 @@
-# CSC-7644_Fine-Tuning-LLM-Models-for-Bug-Detection-in-Quantum-Software
+# CSC-7644_Fine-Tuning-LLMs-for-Bug-Detection-in-Quantum-Software
 This project extends the framework with a fine-tuning mode using parameter-efficient methods (LoRA/QLoRA) on open-source LLMs. It targets quantum software developers, researchers, and educators. Undetected bugs in applications like quantum key distribution (QKD) can silently compromise cryptographic guarantees, making automated detection critical.
