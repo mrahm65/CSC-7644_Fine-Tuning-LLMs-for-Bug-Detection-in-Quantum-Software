@@ -18,6 +18,7 @@ The repository ships the full data, model registry, training loop, evaluation, a
 - **Disk-safe training** - a custom `ManualEarlyStoppingCallback` removes the need for HuggingFace's checkpoint-saving machinery so experiments run end-to-end without filling small Kaggle/Colab disks.
 - **Publication-ready figures** - confusion matrix, per-fold scatter, per-model ROC, cross-model bar chart, ROC overlay, and a paired per-fold strip plot are written as 300-dpi PNGs.
 - **Reproducible artifacts** - every run also writes per-fold CSVs and a combined JSON so results can be inspected without rerunning training.
+- **Clean output layout** - PNGs land in `figures/`, CSV/JSON tables land in `tables/`, and the HuggingFace Trainer's per-fold scratch lives in `results/` (cleaned automatically at the end of each fold).
 
 ## 3. Tech Stack and Architecture
 
@@ -68,12 +69,14 @@ cp .env.example .env
 
 Then edit `.env` to point at your data file and output directory:
 
-| Variable     | Required | Default                              | Purpose                                        |
-|--------------|----------|--------------------------------------|------------------------------------------------|
-| `DATA_PATH`  | no       | `data/bug_patterns_labeled.json`     | Path to the labeled JSON dataset.              |
-| `OUTPUT_DIR` | no       | `results`                            | Where figures/JSONs/CSVs are written.          |
-| `HF_HOME`    | no       | system default                       | HuggingFace cache directory (optional).        |
-| `HF_TOKEN`   | no       | unset                                | Only needed for gated models (none used here). |
+| Variable      | Required | Default                              | Purpose                                                                          |
+|---------------|----------|--------------------------------------|----------------------------------------------------------------------------------|
+| `DATA_PATH`   | no       | `data/bug_patterns_labeled.json`     | Path to the labeled JSON dataset.                                                |
+| `OUTPUT_DIR`  | no       | `results`                            | Trainer scratch directory; per-fold temp dirs live here and are auto-cleaned.    |
+| `FIGURES_DIR` | no       | `figures`                            | PNG figures (per-model + cross-model).                                           |
+| `TABLES_DIR`  | no       | `tables`                             | CSV / JSON result tables (per-model + cross-model).                              |
+| `HF_HOME`     | no       | system default                       | HuggingFace cache directory (optional).                                          |
+| `HF_TOKEN`    | no       | unset                                | Only needed for gated models (none used here).                                   |
 
 No API keys or secrets are required to run the pipeline as shipped. **Never commit `.env` or any secret material** - `.gitignore` already excludes `.env`.
 
@@ -121,8 +124,16 @@ python main.py --models roberta codebert
 ```bash
 python main.py \
     --data-path /path/to/categorized.json \
-    --output-dir /path/to/results
+    --figures-dir /path/to/figures \
+    --tables-dir  /path/to/tables \
+    --output-dir  /path/to/scratch
 ```
+
+Each folder serves a different purpose:
+
+- `--figures-dir` / `FIGURES_DIR` (default `figures/`) - all PNG figures.
+- `--tables-dir`  / `TABLES_DIR`  (default `tables/`)  - all CSV and JSON result tables.
+- `--output-dir`  / `OUTPUT_DIR`  (default `results/`) - trainer scratch only; per-fold temp directories are deleted at the end of every fold.
 
 ### Importing the modules
 
@@ -169,8 +180,9 @@ The original Kaggle notebook is preserved under `notebooks/quantum-vs-classical-
 │   └── bug_patterns_labeled.json    # Bug-pattern dataset shipped with the repo
 ├── notebooks/
 │   └── quantum-vs-classical-bug-prediction-v1.ipynb   # Original Kaggle notebook
-├── results/                         # Generated artifacts (gitignored)
-├── figures/                         # Optional: copy-out folder for the quad chart
+├── figures/                         # PNG figures produced by main.py (gitignored)
+├── tables/                          # CSV / JSON result tables produced by main.py (gitignored)
+├── results/                         # Trainer scratch (per-fold temp dirs, gitignored)
 ├── requirements.txt                 # Pinned dependencies
 ├── .env.example                     # Template for local environment variables
 ├── .gitignore

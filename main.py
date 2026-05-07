@@ -4,19 +4,27 @@ Usage::
 
     python main.py
     python main.py --data-path data/bug_patterns_categorized.json
-    python main.py --output-dir results --models roberta codebert
+    python main.py --figures-dir figures --tables-dir tables
+    python main.py --models roberta codebert
     python main.py --quick   # smoke-test with 2 folds and 1 seed
 
-Outputs (under ``--output-dir``, default ``./results``):
+Outputs are split across two folders:
 
-* ``fig1_confusion_matrix_<short>.png``
-* ``fig2_fold_distribution_<short>.png``
-* ``fig3_roc_curve_<short>.png``
-* ``results_<short>.json`` and ``per_fold_<short>.csv``
-* ``fig_cross_model_comparison.png``
-* ``fig_roc_overlay.png``
-* ``fig_paired_per_fold.png``
-* ``cross_model_comparison.csv`` and ``cross_model_results.json``
+* ``--figures-dir`` (default ``./figures``):
+    * ``fig1_confusion_matrix_<short>.png``
+    * ``fig2_fold_distribution_<short>.png``
+    * ``fig3_roc_curve_<short>.png``
+    * ``fig_cross_model_comparison.png``
+    * ``fig_roc_overlay.png``
+    * ``fig_paired_per_fold.png``
+
+* ``--tables-dir`` (default ``./tables``):
+    * ``results_<short>.json`` and ``per_fold_<short>.csv``
+    * ``cross_model_comparison.csv`` and ``cross_model_results.json``
+
+The ``--output-dir`` (default ``./results``) is reserved for the
+HuggingFace Trainer's per-fold scratch directories, which are deleted
+at the end of every fold to keep disk usage bounded.
 """
 
 from __future__ import annotations
@@ -59,7 +67,26 @@ def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
     parser.add_argument(
         "--output-dir",
         default=None,
-        help="Where to write figures, JSONs, and CSVs.",
+        help=(
+            "Trainer scratch directory (per-fold temp dirs live here). "
+            "Defaults to $OUTPUT_DIR or ./results."
+        ),
+    )
+    parser.add_argument(
+        "--figures-dir",
+        default=None,
+        help=(
+            "Where to write PNG figures. Defaults to $FIGURES_DIR or "
+            "./figures."
+        ),
+    )
+    parser.add_argument(
+        "--tables-dir",
+        default=None,
+        help=(
+            "Where to write CSV/JSON result tables. Defaults to "
+            "$TABLES_DIR or ./tables."
+        ),
     )
     parser.add_argument(
         "--models",
@@ -99,12 +126,18 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         config.data_path = args.data_path
     if args.output_dir:
         config.output_dir = args.output_dir
+    if args.figures_dir:
+        config.figures_dir = args.figures_dir
+    if args.tables_dir:
+        config.tables_dir = args.tables_dir
     if args.quick:
         config.n_folds = 2
         config.cv_seeds = (42,)
         config.num_epochs = 2
 
     os.makedirs(config.output_dir, exist_ok=True)
+    os.makedirs(config.figures_dir, exist_ok=True)
+    os.makedirs(config.tables_dir, exist_ok=True)
     apply_plot_style()
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -167,9 +200,11 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         )
         print(comparison_df.to_string(index=False))
 
-        plot_cross_model_comparison(summaries, output_dir=config.output_dir)
-        plot_roc_overlay(summaries, output_dir=config.output_dir)
-        plot_paired_per_fold(summaries, output_dir=config.output_dir)
+        plot_cross_model_comparison(
+            summaries, output_dir=config.figures_dir
+        )
+        plot_roc_overlay(summaries, output_dir=config.figures_dir)
+        plot_paired_per_fold(summaries, output_dir=config.figures_dir)
 
     save_cross_model_results(
         summaries,
@@ -178,10 +213,11 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             f"{config.n_folds}-fold x {len(config.cv_seeds)} "
             f"seeds = {config.total_folds_per_model} folds per model"
         ),
-        output_dir=config.output_dir,
+        output_dir=config.tables_dir,
     )
 
-    print(f"\nAll artifacts saved to: {config.output_dir}")
+    print(f"\nFigures saved to: {config.figures_dir}")
+    print(f"Tables  saved to: {config.tables_dir}")
     return 0
 
 

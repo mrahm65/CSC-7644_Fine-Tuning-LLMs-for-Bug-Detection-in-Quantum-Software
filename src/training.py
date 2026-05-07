@@ -2,7 +2,8 @@
 
 The high-level entry point is :func:`run_full_experiment`, which sweeps
 ``cv_seeds * n_folds`` runs for a single backbone and writes per-model
-artifacts (figures, JSON, CSV) under ``config.output_dir``.
+artifacts (figures, JSON, CSV) under the directories on the active
+``TrainingConfig`` (``figures_dir`` and ``tables_dir``).
 
 For a single fold call :func:`run_fold` directly. It returns the predicted
 labels, soft-max probabilities, summary metrics, and the per-epoch log so
@@ -234,8 +235,10 @@ def run_full_experiment(
 ) -> Dict[str, Any]:
     """Run :py:attr:`config.total_folds_per_model` folds for one backbone.
 
-    Saves per-model figures, the per-fold CSV, and a results JSON to
-    ``config.output_dir``.
+    Saves per-model figures to ``config.figures_dir`` and per-model
+    CSV/JSON tables to ``config.tables_dir``. Per-fold trainer scratch
+    directories live under ``config.output_dir`` and are deleted at the
+    end of every fold.
 
     Args:
         model_name: HuggingFace model id (e.g. ``microsoft/codebert-base``).
@@ -256,7 +259,10 @@ def run_full_experiment(
     print(f"  Notes     : {description}")
     print("=" * 72)
 
+    # Trainer scratch + figures + tables can all live in different folders.
     os.makedirs(config.output_dir, exist_ok=True)
+    os.makedirs(config.figures_dir, exist_ok=True)
+    os.makedirs(config.tables_dir, exist_ok=True)
 
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     data_collator = DataCollatorWithPadding(tokenizer=tokenizer)
@@ -360,27 +366,27 @@ def run_full_experiment(
         pooled_acc=pooled_acc,
         pooled_f1=pooled_f1,
         pooled_auc=pooled_auc,
-        output_dir=config.output_dir,
+        output_dir=config.figures_dir,
     )
     plot_fold_distribution(
         fold_accs,
         fold_f1s,
         fold_aucs,
         model_short=model_short,
-        output_dir=config.output_dir,
+        output_dir=config.figures_dir,
     )
     plot_roc_curve(
         results_all,
         model_short=model_short,
         pooled_auc=pooled_auc,
-        output_dir=config.output_dir,
+        output_dir=config.figures_dir,
     )
 
     # ---------- Per-model JSON / CSV --------------------------------------
     json_path = os.path.join(
-        config.output_dir, f"results_{model_short}.json"
+        config.tables_dir, f"results_{model_short}.json"
     )
-    csv_path = os.path.join(config.output_dir, f"per_fold_{model_short}.csv")
+    csv_path = os.path.join(config.tables_dir, f"per_fold_{model_short}.csv")
 
     with open(json_path, "w", encoding="utf-8") as handle:
         json.dump(
