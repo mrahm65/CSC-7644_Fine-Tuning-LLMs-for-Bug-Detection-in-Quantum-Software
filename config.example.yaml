@@ -1,0 +1,54 @@
+# Sample YAML configuration matching src.config.TrainingConfig.
+#
+# Note: the pipeline currently reads its config from environment variables
+# and CLI flags rather than a YAML file. This example is provided so
+# graders and contributors can see every tunable knob in one place. Pass
+# any of the I/O paths via the matching env variable (DATA_PATH,
+# OUTPUT_DIR, FIGURES_DIR, TABLES_DIR, FIGURE_FORMAT) before running
+# `python main.py`.
+
+# --- I/O paths --------------------------------------------------------------
+data_path:    data/bug_patterns_labeled.json
+output_dir:   results        # Trainer scratch (per-fold temp dirs).
+figures_dir:  figures        # PNG / SVG figures.
+tables_dir:   tables         # CSV / JSON tables.
+figure_format: svg           # One of: svg, png, pdf.
+
+# --- Tokenization -----------------------------------------------------------
+max_len: 256
+text_fields: [name, description, example_code]
+label_field: bug_category
+
+# --- Cross-validation -------------------------------------------------------
+n_folds: 5
+cv_seeds: [42, 7, 2024, 99, 123]
+
+# --- Optimization -----------------------------------------------------------
+num_epochs:       12
+learning_rate:    2.0e-5
+batch_size:       8
+eval_batch_size:  64
+weight_decay:     0.05
+warmup_ratio:     0.15
+dropout:          0.2
+val_split:        0.10
+label_smoothing:  0.05
+
+# --- Early stopping ---------------------------------------------------------
+es_patience: 4
+
+# --- Misc -------------------------------------------------------------------
+use_fp16:      true
+logging_steps: 500
+
+# --- Models compared (matches src.config.MODEL_REGISTRY) --------------------
+models:
+  - name: roberta-base
+    short: roberta
+    description: General-purpose text encoder (English only) - no code pretraining
+  - name: microsoft/codebert-base
+    short: codebert
+    description: Code + NL bimodal pretraining (CodeSearchNet)
+  - name: microsoft/graphcodebert-base
+    short: graphcodebert
+    description: Code + NL + data-flow graph pretraining

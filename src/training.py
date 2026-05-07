@@ -367,6 +367,7 @@ def run_full_experiment(
         pooled_f1=pooled_f1,
         pooled_auc=pooled_auc,
         output_dir=config.figures_dir,
+        fmt=config.figure_format,
     )
     plot_fold_distribution(
         fold_accs,
@@ -374,12 +375,14 @@ def run_full_experiment(
         fold_aucs,
         model_short=model_short,
         output_dir=config.figures_dir,
+        fmt=config.figure_format,
     )
     plot_roc_curve(
         results_all,
         model_short=model_short,
         pooled_auc=pooled_auc,
         output_dir=config.figures_dir,
+        fmt=config.figure_format,
     )
 
     # ---------- Per-model JSON / CSV --------------------------------------

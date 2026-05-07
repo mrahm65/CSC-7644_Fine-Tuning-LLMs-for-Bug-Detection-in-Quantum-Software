@@ -99,6 +99,15 @@ def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
         ),
     )
     parser.add_argument(
+        "--figure-format",
+        default=None,
+        choices=["svg", "png", "pdf"],
+        help=(
+            "Image format for plot outputs. Defaults to $FIGURE_FORMAT or "
+            "svg."
+        ),
+    )
+    parser.add_argument(
         "--quick",
         action="store_true",
         help=(
@@ -130,6 +139,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         config.figures_dir = args.figures_dir
     if args.tables_dir:
         config.tables_dir = args.tables_dir
+    if args.figure_format:
+        config.figure_format = args.figure_format
     if args.quick:
         config.n_folds = 2
         config.cv_seeds = (42,)
@@ -201,10 +212,20 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         print(comparison_df.to_string(index=False))
 
         plot_cross_model_comparison(
-            summaries, output_dir=config.figures_dir
+            summaries,
+            output_dir=config.figures_dir,
+            fmt=config.figure_format,
         )
-        plot_roc_overlay(summaries, output_dir=config.figures_dir)
-        plot_paired_per_fold(summaries, output_dir=config.figures_dir)
+        plot_roc_overlay(
+            summaries,
+            output_dir=config.figures_dir,
+            fmt=config.figure_format,
+        )
+        plot_paired_per_fold(
+            summaries,
+            output_dir=config.figures_dir,
+            fmt=config.figure_format,
+        )
 
     save_cross_model_results(
         summaries,

@@ -6,14 +6,16 @@ hyperparameter consumed by the training loop.
 
 Environment variables (read at runtime by :func:`get_default_config`):
 
-* ``DATA_PATH``    - JSON file containing the labeled bug-pattern records.
-* ``OUTPUT_DIR``   - Trainer scratch directory (per-fold temp dirs live
-                     here and are deleted after each fold).
-* ``FIGURES_DIR``  - Directory where PNG figures are written.
-* ``TABLES_DIR``   - Directory where CSV / JSON result tables are written.
+* ``DATA_PATH``      - JSON file containing the labeled bug-pattern records.
+* ``OUTPUT_DIR``     - Trainer scratch directory (per-fold temp dirs live
+                       here and are deleted after each fold).
+* ``FIGURES_DIR``    - Directory where figures are written.
+* ``TABLES_DIR``     - Directory where CSV / JSON result tables are written.
+* ``FIGURE_FORMAT``  - File format for figures: ``"svg"`` (default),
+                       ``"png"``, or ``"pdf"``.
 
-All four variables fall back to sensible repository-relative defaults so
-the package works out of the box.
+All variables fall back to sensible repository-relative defaults so the
+package works out of the box.
 """
 
 from __future__ import annotations
@@ -108,7 +110,7 @@ class TrainingConfig:
     # Trainer scratch (per-fold temp dirs are written here and cleaned up
     # at the end of every fold).
     output_dir: str = DEFAULT_OUTPUT_DIR
-    # PNG figures (per-model + cross-model).
+    # Figures (per-model + cross-model).
     figures_dir: str = DEFAULT_FIGURES_DIR
     # CSV / JSON tables (per-model + cross-model).
     tables_dir: str = DEFAULT_TABLES_DIR
@@ -118,6 +120,9 @@ class TrainingConfig:
     logging_steps: int = 500
     label_field: str = "bug_category"
     text_fields: Tuple[str, ...] = ("name", "description", "example_code")
+    # Figure file format. ``"svg"`` is preferred for crisp vector output;
+    # ``"png"`` is also supported (300 dpi raster).
+    figure_format: str = "svg"
 
     # Filled in by ``__post_init__`` so each call sees a fresh tuple
     _registry: Tuple[Dict[str, str], ...] = field(default_factory=tuple)
@@ -129,15 +134,16 @@ class TrainingConfig:
 
 
 def get_default_config() -> TrainingConfig:
-    """Build a :class:`TrainingConfig` honoring the four I/O env variables.
+    """Build a :class:`TrainingConfig` honoring the I/O env variables.
 
-    ``DATA_PATH``, ``OUTPUT_DIR``, ``FIGURES_DIR``, and ``TABLES_DIR``
-    override the dataclass defaults; everything else keeps the values used
-    in the source notebook.
+    ``DATA_PATH``, ``OUTPUT_DIR``, ``FIGURES_DIR``, ``TABLES_DIR``, and
+    ``FIGURE_FORMAT`` override the dataclass defaults; everything else
+    keeps the values used in the source notebook.
     """
     return TrainingConfig(
         data_path=os.environ.get("DATA_PATH", DEFAULT_DATA_PATH),
         output_dir=os.environ.get("OUTPUT_DIR", DEFAULT_OUTPUT_DIR),
         figures_dir=os.environ.get("FIGURES_DIR", DEFAULT_FIGURES_DIR),
         tables_dir=os.environ.get("TABLES_DIR", DEFAULT_TABLES_DIR),
+        figure_format=os.environ.get("FIGURE_FORMAT", "svg"),
     )

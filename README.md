@@ -18,7 +18,8 @@ The repository ships the full data, model registry, training loop, evaluation, a
 - **Disk-safe training** - a custom `ManualEarlyStoppingCallback` removes the need for HuggingFace's checkpoint-saving machinery so experiments run end-to-end without filling small Kaggle/Colab disks.
 - **Publication-ready figures** - confusion matrix, per-fold scatter, per-model ROC, cross-model bar chart, ROC overlay, and a paired per-fold strip plot are written as 300-dpi PNGs.
 - **Reproducible artifacts** - every run also writes per-fold CSVs and a combined JSON so results can be inspected without rerunning training.
-- **Clean output layout** - PNGs land in `figures/`, CSV/JSON tables land in `tables/`, and the HuggingFace Trainer's per-fold scratch lives in `results/` (cleaned automatically at the end of each fold).
+- **Clean output layout** - SVG figures land in `figures/`, CSV/JSON tables land in `tables/`, and the HuggingFace Trainer's per-fold scratch lives in `results/` (cleaned automatically at the end of each fold).
+- **Sample artifacts shipped** - `scripts/generate_sample_artifacts.py` populates `figures/` and `tables/` with realistic synthetic outputs in seconds, so the layout is visible without paying for a GPU run.
 
 ## 3. Tech Stack and Architecture
 
@@ -75,6 +76,7 @@ Then edit `.env` to point at your data file and output directory:
 | `OUTPUT_DIR`  | no       | `results`                            | Trainer scratch directory; per-fold temp dirs live here and are auto-cleaned.    |
 | `FIGURES_DIR` | no       | `figures`                            | PNG figures (per-model + cross-model).                                           |
 | `TABLES_DIR`  | no       | `tables`                             | CSV / JSON result tables (per-model + cross-model).                              |
+| `FIGURE_FORMAT` | no     | `svg`                                | Image format for figures (one of `svg`, `png`, `pdf`).                           |
 | `HF_HOME`     | no       | system default                       | HuggingFace cache directory (optional).                                          |
 | `HF_TOKEN`    | no       | unset                                | Only needed for gated models (none used here).                                   |
 
@@ -112,6 +114,16 @@ python main.py --quick
 ```
 
 `--quick` reduces the CV protocol to 2 folds x 1 seed and trims epochs to 2 so the wiring can be verified locally before launching a real run.
+
+### Populate `figures/` and `tables/` without training
+
+Sample SVG figures and CSV tables can be generated in seconds without GPUs or any model downloads:
+
+```bash
+python scripts/generate_sample_artifacts.py
+```
+
+This drives the plotting and aggregation code with realistic synthetic predictions, so reviewers can see the intended layout immediately. Real training results (`python main.py`) overwrite the same filenames, so once a real sweep is finished the sample files are replaced.
 
 ### Subset of backbones
 
@@ -180,9 +192,21 @@ The original Kaggle notebook is preserved under `notebooks/quantum-vs-classical-
 │   └── bug_patterns_labeled.json    # Bug-pattern dataset shipped with the repo
 ├── notebooks/
 │   └── quantum-vs-classical-bug-prediction-v1.ipynb   # Original Kaggle notebook
-├── figures/                         # PNG figures produced by main.py (gitignored)
-├── tables/                          # CSV / JSON result tables produced by main.py (gitignored)
+├── scripts/
+│   ├── run_experiment.sh            # Convenience wrapper around python main.py
+│   └── generate_sample_artifacts.py # Populate figures/ + tables/ without training
+├── tests/
+│   ├── test_config.py               # Defaults + env-var overrides
+│   ├── test_data_loader.py          # JSON loading + text builder
+│   └── test_callbacks.py            # Oversampling + metric helpers
+├── docs/
+│   ├── architecture.md              # Module overview and data flow
+│   └── results.md                   # What every output file contains
+├── figures/                         # SVG figures produced by main.py
+├── tables/                          # CSV / JSON result tables produced by main.py
 ├── results/                         # Trainer scratch (per-fold temp dirs, gitignored)
+├── pyproject.toml                   # Package metadata + dev tooling configuration
+├── config.example.yaml              # Annotated reference for every TrainingConfig field
 ├── requirements.txt                 # Pinned dependencies
 ├── .env.example                     # Template for local environment variables
 ├── .gitignore
