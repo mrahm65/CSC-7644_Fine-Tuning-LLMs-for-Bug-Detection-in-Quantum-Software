@@ -4,32 +4,35 @@
   "n_samples": 233,
   "class_distribution": {"classical": 134, "quantum": 99},
   "cv_setup": "5-fold stratified x 5 seeds = 25 fold-runs per backbone (75 fold-runs total)",
+  "source_notebook": "notebooks/quantum-vs-classical-bug-detection-Final.ipynb",
   "models": [
-    {
-      "model_short": "roberta",
-      "hf_identifier": "roberta-base",
-      "mean_accuracy": 0.764, "std_accuracy": 0.061,
-      "mean_macro_f1": 0.754, "std_macro_f1": 0.066,
-      "mean_roc_auc":  0.858, "std_roc_auc":  0.048,
-      "pooled_accuracy": 0.764, "pooled_macro_f1": 0.756
-    },
-    {
-      "model_short": "codebert",
-      "hf_identifier": "microsoft/codebert-base",
-      "mean_accuracy": 0.767, "std_accuracy": 0.057,
-      "mean_macro_f1": 0.763, "std_macro_f1": 0.056,
-      "mean_roc_auc":  0.855, "std_roc_auc":  0.044,
-      "pooled_accuracy": 0.767, "pooled_macro_f1": 0.764
-    },
-    {
-      "model_short": "graphcodebert",
-      "hf_identifier": "microsoft/graphcodebert-base",
-      "mean_accuracy": 0.758, "std_accuracy": 0.058,
-      "mean_macro_f1": 0.756, "std_macro_f1": 0.058,
-      "mean_roc_auc":  0.860, "std_roc_auc":  0.047,
-      "pooled_accuracy": 0.758, "pooled_macro_f1": 0.757
-    }
+    {"model_short": "roberta",       "hf_identifier": "roberta-base",
+     "mean_accuracy": 0.764, "std_accuracy": 0.061,
+     "mean_macro_f1": 0.754, "std_macro_f1": 0.066,
+     "mean_roc_auc":  0.858, "std_roc_auc":  0.048,
+     "pooled_accuracy": 0.764, "pooled_macro_f1": 0.756},
+    {"model_short": "codebert",      "hf_identifier": "microsoft/codebert-base",
+     "mean_accuracy": 0.767, "std_accuracy": 0.057,
+     "mean_macro_f1": 0.763, "std_macro_f1": 0.056,
+     "mean_roc_auc":  0.855, "std_roc_auc":  0.044,
+     "pooled_accuracy": 0.767, "pooled_macro_f1": 0.764},
+    {"model_short": "graphcodebert", "hf_identifier": "microsoft/graphcodebert-base",
+     "mean_accuracy": 0.758, "std_accuracy": 0.058,
+     "mean_macro_f1": 0.756, "std_macro_f1": 0.058,
+     "mean_roc_auc":  0.860, "std_roc_auc":  0.047,
+     "pooled_accuracy": 0.758, "pooled_macro_f1": 0.757}
   ],
-  "headline_finding": "All three backbones converge to ~76% accuracy with no statistically significant differences between them (paired t-tests, n=25 folds per pair, p > 0.3 for every metric).",
-  "implication": "On 233 labeled samples, code-aware pretraining (CodeBERT) and structure-aware pretraining (GraphCodeBERT) do not yield a measurable advantage over English-only RoBERTa for this binary task."
+  "paired_t_tests": [
+    {"metric": "accuracy", "a": "roberta",  "b": "codebert",      "delta": -0.002, "t": -0.18, "p": 0.861, "significance": "n.s."},
+    {"metric": "accuracy", "a": "codebert", "b": "graphcodebert", "delta":  0.009, "t":  0.99, "p": 0.334, "significance": "n.s."},
+    {"metric": "accuracy", "a": "roberta",  "b": "graphcodebert", "delta":  0.006, "t":  0.63, "p": 0.533, "significance": "n.s."},
+    {"metric": "macro_f1", "a": "roberta",  "b": "codebert",      "delta": -0.009, "t": -0.63, "p": 0.533, "significance": "n.s."},
+    {"metric": "macro_f1", "a": "codebert", "b": "graphcodebert", "delta":  0.007, "t":  0.81, "p": 0.428, "significance": "n.s."},
+    {"metric": "macro_f1", "a": "roberta",  "b": "graphcodebert", "delta": -0.002, "t": -0.20, "p": 0.840, "significance": "n.s."},
+    {"metric": "roc_auc",  "a": "roberta",  "b": "codebert",      "delta":  0.003, "t":  0.42, "p": 0.681, "significance": "n.s."},
+    {"metric": "roc_auc",  "a": "codebert", "b": "graphcodebert", "delta": -0.006, "t": -1.28, "p": 0.213, "significance": "n.s."},
+    {"metric": "roc_auc",  "a": "roberta",  "b": "graphcodebert", "delta": -0.002, "t": -0.28, "p": 0.782, "significance": "n.s."}
+  ],
+  "headline_finding": "All three backbones converge to ~76% accuracy with no statistically significant differences between them (paired t-tests, n=25 folds per pair, every p > 0.2).",
+  "implication": "On 233 labeled samples, code-aware (CodeBERT) and structure-aware (GraphCodeBERT) pretraining do not yield a measurable advantage over English-only RoBERTa for this binary task."
 }
