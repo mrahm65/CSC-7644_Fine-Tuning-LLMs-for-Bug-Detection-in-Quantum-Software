@@ -1,0 +1,2414 @@
+[
+  {
+    "pattern_id": "BQCP_1",
+    "name": "Missing Error Handling",
+    "taxonomy_class": "unknown",
+    "description": "From fixer: \"Currently, cvx_fit does not check the success of the prob.solve() call. When the solver fails, this results in a crash on the following line: rho_fit = rho_r.value + 1j * rho_i.value\"",
+    "example_code": "",
+    "fix_hint": "Fix to allow cvx_fit to retry and finally gracefully fail if the solver cannot handle the problem (#3)",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:quantum state evaluation",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qiskit-ignis",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1012",
+    "name": "Flaky Test, Misconfiguration, Misconfiguration - Testing",
+    "taxonomy_class": "incorrect_operator",
+    "description": "Fix issue where the \"diagonal\" gate is checked to be unitary with too high a tolerance. This was causing diagonals generated from Numpy functions to often fail the test.",
+    "example_code": "",
+    "fix_hint": "Fix tolerance when checking if diagonal is unitary (#707)",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:testing",
+      "incorrect_operator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qiskit-aer"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_104",
+    "name": "Type Problem",
+    "taxonomy_class": "incorrect_operator",
+    "description": "Fixer: \"Fixed a bug within `default.qubit`, resulting in greater efficiency when applying a state vector to all wires on the device.\" Bug-fix: \"The issue is simply that device_wires.labels is an n-tuple, e.g., (0, 1, 2), while sorted(device_wires.labels) is a list, e.g., [0, 1, 2]\"",
+    "example_code": "",
+    "fix_hint": "Fixes if statement in default.qubit (#849)\n\n* Fixes if statement\r\n\r\n* Runs black\r\n\r\n* adding to changelog\r\n\r\n* tests and black\r\n\r\n* fix tests\r\n\r\nCo-authored-by: Josh Izaac <josh146@gmail.com>",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:quantum abstractions",
+      "incorrect_operator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:pennylane"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1057",
+    "name": "Overlooked Corner Case",
+    "taxonomy_class": "unknown",
+    "description": "Fixer: \"Fixes a bug that resulted in `c_if` not working when the width of the conditional register was greater than 64.\" Reporter: \"Added fix for bug where executing conditional instruction with c_if on the BasicAer backend either resulted in a crash or incorrect result for registers larger than or equal to 64-bits.\"",
+    "example_code": "",
+    "fix_hint": "Fix condtional instructions using `c_if` not working for reg of size>=64 on BasicAer backend (#1089)\n\nWhen executing on the `BasicAer` backend `c_if` either result in a\r\ncrash for if the conditional register was 64-bits wide, or just not\r\nwork for registers > 64-bits.\r\n\r\nThe `hex2bin` routine in `util.hpp` used 8 hex-character instead\r\nfor 16 for the block size to process in 64-bit chunks.\r\nAlso added check to avoid invoking `std::stoull` with empty string,\r\nwhich was causing the crashes.\r\n\r\nIn the implementation of `ClassicalRegister::apply_bfunc,` truncated\r\nthe leading zeros before comparing the masked register value with the\r\ntarget value for the condtional.",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:quantum abstractions, simulator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qiskit-aer",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1092",
+    "name": "Memory Leak",
+    "taxonomy_class": "wrong_initial_state",
+    "description": "Reporter: \"QFT simulation ends unexpectedly with SIGSEGV (Segmentation fault) when using MPI, and the full statevector is larger than the memory available on one node.\" Fixer: 'MPI parallelization fix\". Fixer: \"I added memory available check for save statevector or matrix and raising exception.\"",
+    "example_code": "",
+    "fix_hint": "MPI parallelization fix (#1278)\n\n\r\n\r\nCo-authored-by: Christopher J. Wood <cjwood@us.ibm.com>\r\nCo-authored-by: Victor Villar <vvilpas@gmail.com>",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:simulator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qiskit-aer",
+      "wrong_initial_state"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_110",
+    "name": "Wrong Identifier",
+    "taxonomy_class": "incorrect_qubit_mapping",
+    "description": "In the qubit representation of tensorflow backend, the imaginary and conjugate functions have the same signature.",
+    "example_code": "",
+    "fix_hint": "Fixed imag in tf device (#946)",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:quantum abstractions, machine code generation",
+      "incorrect_qubit_mapping",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:pennylane"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1102",
+    "name": "API Outdated - External",
+    "taxonomy_class": "unknown",
+    "description": "Fix: change link to IBM api endpoint",
+    "example_code": "",
+    "fix_hint": "Hotfix/main ibm api url (#5)\n\nUpdated the IBM API URL to the main URL, fixed issue with Python2 raw_input, added coverage and Travis CI badges to readme, and fixed some small bugs in docs.",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:interface to quantum computer",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:projectq",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1103",
+    "name": "Overlooked Corner Case, Misconfiguration, Misconfiguration - Testing",
+    "taxonomy_class": "unknown",
+    "description": "The test did not check the presence of the simulator before running the test. The fix uses the setup method to check and initialize a default option.",
+    "example_code": "",
+    "fix_hint": "Fix cpp-simulator not being installed causing many unrelated tests to fail (#25)\n\n- Reduce to a single dedicated test to check for the problem\r\n- Only run other tests on available simulators",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:testing",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:projectq",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1105",
+    "name": "Incorrect Application Logic",
+    "taxonomy_class": "unknown",
+    "description": "Reporter: \"The most important condition that hash functions must satisfy is a == b implies hash(a) == hash(b), but the BasicQubit class doesn't meet it:\"",
+    "example_code": "",
+    "fix_hint": "Fix BasicQubit.__hash__ not satisfying a==b implies hash(a)==hash(b) (#44)\n\n* Fix BasicQubit.__hash__ not satisfying a==b implies hash(a)==hash(b)",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:quantum abstractions",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:projectq",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1108",
+    "name": "Syntax Error",
+    "taxonomy_class": "unknown",
+    "description": "bug: declare an exception without the keyword raise in front of it.",
+    "example_code": "",
+    "fix_hint": "Fixed bug in setup.py: raise exception. (#80)",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:infrastructural scripts and glue code",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:projectq",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1110",
+    "name": "Type Problem",
+    "taxonomy_class": "incorrect_operator",
+    "description": "Reporter: \"Can't convert complex to float\", thus the fixer extracts the real part to convert to float (since previous conditions assure us the imag part is 0)",
+    "example_code": "",
+    "fix_hint": "Fixing small TypeError bug in TimeEvolution (#101)",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:quantum abstractions",
+      "incorrect_operator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:projectq"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1111",
+    "name": "Overlooked Corner Case, Type Problem",
+    "taxonomy_class": "incorrect_operator",
+    "description": "Bug: where the loop variable is not checked to be an integer, now it raises error for non sensical values.",
+    "example_code": "",
+    "fix_hint": "Fix no-iteration loop running once (#113)",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:machine code generation",
+      "incorrect_operator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:projectq"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1112",
+    "name": "Overlooked Corner Case, Type Problem",
+    "taxonomy_class": "incorrect_operator",
+    "description": "Fixer: \"Bugfix OpenMP flags in setup.py: change -openmp to -qopenmp if icc is used as -openmp is interpreted as -o penmp when using clang or gcc\".",
+    "example_code": "",
+    "fix_hint": "Bugfix OpenMP flags in setup.py (#121)",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:infrastructural scripts and glue code",
+      "incorrect_operator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:projectq"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1118",
+    "name": "Overlooked Corner Case",
+    "taxonomy_class": "unknown",
+    "description": "fix division by 0",
+    "example_code": "",
+    "fix_hint": "Fix StatePreparation division by 0 and update docs (#255)",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:machine code generation",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:projectq",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1122",
+    "name": "Wrong Identifier",
+    "taxonomy_class": "incorrect_qubit_mapping",
+    "description": "The token and device were collected from user input in the same variable, becasue of a copy paste pattern.",
+    "example_code": "",
+    "fix_hint": "bug fix on ibm example; new aqt example; updated the main README file (#368)\n\nCo-authored-by: dbretaud <logiciqt@gmail.com>",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:tutorial and examples",
+      "incorrect_qubit_mapping",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:projectq"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1123",
+    "name": "Misconfiguration, Misconfiguration - Installation",
+    "taxonomy_class": "unknown",
+    "description": "The build procedure (setup.py) on Mac failed with ValueError. The problem involves the versions of the libraries.",
+    "example_code": "",
+    "fix_hint": "Fix install on macOS Big Sur (#383)",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:infrastructural scripts and glue code",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:projectq",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1139",
+    "name": "Incorrect Numerical Computation, Imprecise Result",
+    "taxonomy_class": "incorrect_operator",
+    "description": "The normalization of a sampling interval was wrong. It should be by 2 ^ bitsRandom instead of 2 ^ bitsRandom + 1.",
+    "example_code": "",
+    "fix_hint": "Clarify docs and fix normalization in Random.qs (#48)\n\n* Clarify docs and fix normalization in Random.qs\r\n\r\n* Fix overflow for bitsRandom=64.",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:classical abstractions",
+      "incorrect_operator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:quantumlibraries"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1149",
+    "name": "Missing Error Handling",
+    "taxonomy_class": "unknown",
+    "description": "To estimate the frequnecy of a certain measured output (e.g. value 0), we use EstimateFrequencyA method. Bug: sometimes that routine can have failures because of the circuit, but the exception raised was incorrect. Fix: use nested try catch to correctly handle the exceptions.",
+    "example_code": "",
+    "fix_hint": "Merge pull request #216 from microsoft/cgranade/fix-199\n\nFix #199.",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:quantum state evaluation",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:quantumlibraries",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1175",
+    "name": "Type Problem, Misconfiguration, Misconfiguration - Building",
+    "taxonomy_class": "incorrect_operator",
+    "description": "The syntax extension of the Q# languages have problem with type inference. The bug is in the language definiton.",
+    "example_code": "",
+    "fix_hint": "Fixed type inference issues with ITuple active patterns (#95)",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:intermediate representation",
+      "incorrect_operator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qsharp-compiler"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1188",
+    "name": "Misconfiguration, Misconfiguration - Testing",
+    "taxonomy_class": "unknown",
+    "description": "To build the library on linux and macos we need to run a bash comand which is specified in and xml like file. The bug consisted in a missing parameter passed to the command (there was no link to the qsc.dll file ) .",
+    "example_code": "",
+    "fix_hint": "Fixes QsCompiler build scripts in macos, linux (#255)",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:infrastructural scripts and glue code",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qsharp-compiler",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1195",
+    "name": "Overlooked Corner Case",
+    "taxonomy_class": "unknown",
+    "description": "In the building script we need to pass some assembly constants. But sometimes they are not present, thus before assigning we have to check if they are available to us, otherwise pass an empty string.",
+    "example_code": "",
+    "fix_hint": "Fixing use of ASSEMBLY_CONSTANTS (#466)\n\nFixes Scripts use of `DefineConstants` overrides all build constants, possibly hiding test failures #446",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:infrastructural scripts and glue code",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qsharp-compiler",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1212",
+    "name": "Misconfiguration, Misconfiguration - Building",
+    "taxonomy_class": "unknown",
+    "description": "Fixer: \"As I am validating the signing on e2e builds I noticed a couple of problems: Compiler dlls are distributed unsigned because during the pack step they are getting rebuilt. To fix this, I added the --no-build flag during packaging.\"",
+    "example_code": "",
+    "fix_hint": "Fixing signing issues. (#712)\n\n* pack-extension\r\n\r\n* --no-build\r\n\r\n* source location",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:infrastructural scripts and glue code",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qsharp-compiler",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1221",
+    "name": "Incorrect Application Logic",
+    "taxonomy_class": "unknown",
+    "description": "Reporter: \"Q# Language Extension crashes on startup and prints the following error message:\"",
+    "example_code": "",
+    "fix_hint": "Fix #885 (#886)\n\n* [WIP] Started updating VS LSP client.\r\n* A few more nullability fixes.\r\n* Use explicit 0:0 range instead of relying on constructor.\r\n* Propagate nullability metadata to F# callers.\r\n* Avoid calling unsafe constructors.\r\n* Avoid deprecated Assert.Equals.\r\n* Set DocumentRangeFormattingProvider to false.\r\n* Fix to AssertCapability.\r\n* Assertions should work more reliabily when capabilities are null.\r\n* Disable nullable reference checking when copying unsound types.\r\n* Check if Range is null, since nullability metadata can be violated.\r\n\r\nCo-authored-by: Ricardo Espinoza <ricardoe@microsoft.com>",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:infrastructural scripts and glue code",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qsharp-compiler",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1222",
+    "name": "Incorrect Application Logic",
+    "taxonomy_class": "unknown",
+    "description": "Reporter: \"QIR code does not respect lazy evaluation of logical binary operator. Program should not seg-fault.\"",
+    "example_code": "",
+    "fix_hint": "Fixing short circuiting for logical operators (#908)",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:machine code generation",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qsharp-compiler",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1229",
+    "name": "Incorrect Application Logic, Overlooked Corner Case",
+    "taxonomy_class": "unknown",
+    "description": "Reporter: \"The following Q# snippet using both named item copy-and-updates and a return inside an if/else block fails to compile when QIR generation is enabled:\". Fixer: \"Fixing an issue where reference count increases were not applied in certain cases\"",
+    "example_code": "",
+    "fix_hint": "Fixing an issue where reference count increases were not applied in certain cases (#987)",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:intermediate representation",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qsharp-compiler",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1230",
+    "name": "Incorrect Application Logic, Incorrect IR - Wrong Information",
+    "taxonomy_class": "incorrect_operator",
+    "description": "Fixer: \"The issue was that certain branching in llvm (specifically for conditional expressions and for the correction in copy-and-update) were not properly registered with the caching mechanism in the QIR generation, such that the generated QIR tried to access values that were created only in certain branches.\"",
+    "example_code": "",
+    "fix_hint": "fixing an issue with caching (#1000)",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:machine code generation",
+      "incorrect_operator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qsharp-compiler"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1233",
+    "name": "Incorrect Application Logic",
+    "taxonomy_class": "unknown",
+    "description": "Reporter: \"The following code fails at runtime if executed via QIR\"",
+    "example_code": "",
+    "fix_hint": "Fixing an issue with partial applications that take unit (#1008)",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:machine code generation",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qsharp-compiler",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1234",
+    "name": "Misconfiguration, Misconfiguration - Building, String Bug",
+    "taxonomy_class": "unknown",
+    "description": "During the incremental build there is a xml like file which determines and output file with a wildecard extension (.*) and that ruined the entire build process.",
+    "example_code": "",
+    "fix_hint": "Fix incremental builds by avoiding wildcard in Outputs (#1041)\n\nThe incremental build support has been broken for a little while, it turns out, and the wildcard in the QSharpCompile target's Outputs property seems to be the cause. We confirmed locally that returning this to explicitly check for the bson fixes the incremental build and meets the needs of the scenarios we cover. I'm hopeful that this will also address QSC reruns in pipeline even when it shouldn't #932 but it's possible the pipeline issue is actually unrelated.",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:infrastructural scripts and glue code",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qsharp-compiler",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1246",
+    "name": "Type Problem, Overlooked Corner Case, Misconfiguration, Misconfiguration - Building",
+    "taxonomy_class": "incorrect_operator",
+    "description": "The bug consisted in a wrong conversion of types form numpy to python integer in expression which use those integers as qubit indices: k.identity(np.uint32(qubit)). Changing a configuration file to force a certain conversion (in C++) was enough.",
+    "example_code": "",
+    "fix_hint": "Resolved type-casting bug to allow different int types for qubit numbers, fixes #62",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:infrastructural scripts and glue code, quantum abs",
+      "incorrect_operator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:openql"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1257",
+    "name": "Syntax Error",
+    "taxonomy_class": "unknown",
+    "description": "Reporter: \"A logical block opening on the line  CMakeLists.txt:56 (IF) closes on the line CMakeLists.txt:59 (ENDIF) with mis-matching arguments.\"",
+    "example_code": "",
+    "fix_hint": "fix top-level CMakeLists.txt mismatched IF/ENDIF (fix #139)",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:infrastructural scripts and glue code, testing",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:openql",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1261",
+    "name": "API Outdated - External",
+    "taxonomy_class": "unknown",
+    "description": "Fixer: \"fixed swig deprecated module warning\"",
+    "example_code": "",
+    "fix_hint": "Merge pull request #287 from QE-Lab/fix/swig-warning\n\nfixed swig deprecated module warning",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:infrastructural scripts and glue code",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:openql",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1263",
+    "name": "Typo, String Bug",
+    "taxonomy_class": "incorrect_operator",
+    "description": "The Toffoly gate was wrongly represented by \"MA\" string, instead of \"AM\". Therefore the test code never called that toffoli related decomposition. Reporter: \"the option is read and checked against \"AM\" and then the function toff_kernel.controlled_cnot_AM is called. Because the option enabled was \"MA\" this decomposition was never called.\"",
+    "example_code": "",
+    "fix_hint": "Merge pull request #295 from QFer/fix/option_decompose_toffoli\n\nToffoli Decomposition Option MA should be AM",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:infrastructural scripts and glue code, testing",
+      "incorrect_operator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:openql"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1266",
+    "name": "String Bug",
+    "taxonomy_class": "unknown",
+    "description": "During compilation there were two registers used for the same purpose. One for \"delay calibration\" and the other for \"FOR loop\".",
+    "example_code": "",
+    "fix_hint": "Merge pull request #10 from DiCarloLab-Delft/hotfix/for_loop\n\nFix for register clash between delay calibration and FOR loop",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:machine code generation, classical abstractions",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:openql",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1270",
+    "name": "Misconfiguration, Misconfiguration - Building",
+    "taxonomy_class": "unknown",
+    "description": "Fixer: \"Move unitary logic into separate compile unit, to prevent its dependencies (notably Eigen) from having to be parsed/template-expanded for every other compile unit as well.\".",
+    "example_code": "",
+    "fix_hint": "Merge pull request #332 from jvanstraten/fix-unitary-compile-time-develop\n\nMove unitary logic into separate compile unit",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:infrastructural scripts and glue code",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:openql",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1279",
+    "name": "Misconfiguration, Misconfiguration - Building",
+    "taxonomy_class": "unknown",
+    "description": "Fixer: \"This fixes compilation of C++ programs when linked against OpenQL statically (as done by setup.py when the OPENQL_BUILD_TESTS env variable exists).\"",
+    "example_code": "",
+    "fix_hint": "Merge pull request #374 from QE-Lab/fix-backward\n\nFix linkage with backward backends",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:infrastructural scripts and glue code, testing",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:openql",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_128",
+    "name": "Incorrect IR - Wrong Information, Overlooked Corner Case, Type Problem",
+    "taxonomy_class": "incorrect_operator",
+    "description": "Bug: during autodifferentiation, if only a single argument is differentiated, the returned gradient does not match the cost function return type.",
+    "example_code": "",
+    "fix_hint": "Fix qml.grad so that the returned gradient always matches the cost function return type if only a single argument is differentiated (#1081)\n\n* Revert \"Fix qml.grad so that the returned gradient always matches the cost function return type if only a single argument is differentiated (#1067)\"\r\n\r\nThis reverts commit cfdb6f8a979a8b549a5446917f8c0fab029e0237.\r\n\r\n* qml fix\r\n\r\n* changelog\r\n\r\n* more",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:domain-specific abstractions",
+      "incorrect_operator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:pennylane"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1280",
+    "name": "Misconfiguration, Misconfiguration - Building",
+    "taxonomy_class": "unknown",
+    "description": "Fixer: \"The code was not C++11 conformant, particularly due to this inane C++ standardese illogic.\"",
+    "example_code": "",
+    "fix_hint": "Merge pull request #375 from QE-Lab/fix-visualizer\n\nFix problems with visualizer on Linux+GCC",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:infrastructural scripts and glue code, testing",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:openql",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1287",
+    "name": "Incorrect Application Logic, Incorrect Scheduling",
+    "taxonomy_class": "unknown",
+    "description": "Fixer: \"Inconsistent event-node pair commutation rule application during DDG construction was causing assertion failures in some cases, specifically when a statement causes multiple events that would not commute with each other if they weren't due to the same statement.\"",
+    "example_code": "",
+    "fix_hint": "Merge pull request #427 from QE-Lab/fix-ddg-build-assert-fail\n\nFix assertion failure during DDG construction",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:machine code generation",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:openql",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1288",
+    "name": "Overlooked Corner Case",
+    "taxonomy_class": "unknown",
+    "description": "Fix statements like an infinite loop not causing any data dependency graph events",
+    "example_code": "",
+    "fix_hint": "Merge pull request #428 from QE-Lab/fix-infinite-loop-ddg\n\nFix statements like an infinite loop not causing any data dependency graph events",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:machine code generation",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:openql",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1327",
+    "name": "Misconfiguration, Misconfiguration - Installation",
+    "taxonomy_class": "unknown",
+    "description": "fix: steup.py was looking for the wrong folder to install cirq, when cirq was a dependency, such as in Open fermion",
+    "example_code": "",
+    "fix_hint": "Fix dev_tools being installed with the cirq package (#608)\n\n- Caught this thanks to simple_check failing for @bryano in openfermion-cirq\r\n- The script was hitting cirq's dev_tools instead of openfermion-cirq's, and getting very confused",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:infrastructural scripts and glue code",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:cirq",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_140",
+    "name": "API Outdated - Internal",
+    "taxonomy_class": "unknown",
+    "description": "Reporter: \"In v.0.15 of PennyLane, two conflicting changes were made: [...] As a result, qml.adjoint() no longer works with templates.\"",
+    "example_code": "",
+    "fix_hint": "Fix inversion of templates (#1243)\n\n* fix inversion of templates\r\n\r\n* fix\r\n\r\n* linting\r\n\r\n* more tests\r\n\r\n* fix tests\r\n\r\n* fix failing tests\r\n\r\n* changelog\r\n\r\n* suggested changes\r\n\r\n* fix sphinx\r\n\r\n* update\r\n\r\n* update\r\n\r\n* Apply suggestions from code review\r\n\r\n* rever\r\n\r\n* typo\r\n\r\n* typo\r\n\r\n* Update tests/tape/test_tape.py\r\n\r\nCo-authored-by: antalszava <antalszava@gmail.com>\r\n\r\n* Apply suggestions from code review\r\n\r\nCo-authored-by: antalszava <antalszava@gmail.com>\r\n\r\nCo-authored-by: Maria Schuld <mariaschuld@gmail.com>\r\nCo-authored-by: antalszava <antalszava@gmail.com>",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:domain-specific abstractions, quantum abstractions",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:pennylane",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1467",
+    "name": "Incorrect Randomenss Handling",
+    "taxonomy_class": "unknown",
+    "description": "The test are labelled as flaky in the sense they take too long to execute (due to the randomness), the solution is to add a random seed to avoid randomness and create circuits which execute in shorter time.",
+    "example_code": "",
+    "fix_hint": "Attempt to fix flaky test by fixing random seed in n_qubit_tomography_test.py (#2758)\n\nIt seems the test can be a bit flaky\r\nhttps://travis-ci.com/quantumlib/Cirq/jobs/285096296\r\n\r\nHappy to modify or outright withdraw if this is misguided.",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:testing",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:cirq",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1518",
+    "name": "API Outdated - Internal",
+    "taxonomy_class": "unknown",
+    "description": "Reporter: \"cirq.TrialResult was deprecated for cirq.Result, however the json parsing did not follow correctly the deprecation, the new code breaks on the old json format.\" \"The @deprecated decorator was used incorrectly on a class which made cirq.TrialResult into an object of type function\". This code is used while reading the json format and mapping it to the correpsonding cirq function.",
+    "example_code": "",
+    "fix_hint": "Fix TrialResult deprecation (#3381)\n\nFix TrialResult deprecation to cater for JSON parsing of old JSON formats.\r\n\r\nIt adds back the TrialResult json and repr files for the json repr testing, adds extra tests for the old, TrialResult based JSON parsing. It also adds the ability to deprecate classes properly via `@deprecate_class`.\r\n\r\nFixes #3380.",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:intermediate representation",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:cirq",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1537",
+    "name": "Misconfiguration, Misconfiguration - Installation",
+    "taxonomy_class": "unknown",
+    "description": "Missing import in a notebook",
+    "example_code": "",
+    "fix_hint": "Fixes transform.ipynb and adds notebook testing (#3497)\n\nFixes a missing import statement from transform.ipynb, also, adds notebook tests.\r\n\r\nThe notebook tests run in parallel and each of them in their own virtual env, ensuring that the `pip install` statements work well. This mirrors how the tests are run on devsite pipelines as well. Hopefully we can catch errors faster this way!\r\n\r\nFollow-up potentials:\r\n- run the notebooks in non-isolated virtualenv _as well_ - so that we test the \"running jupyter notebook from the repo\" use case too.\r\n- parallelize on the Github Action job level the notebooks - it is already taking 11 mins :(\r\n\r\nI tested treebeard (https://github.com/quantumlib/Cirq/issues/3504) github action, and finally settled on rolling my own driver with an executor. For executor I chose papermill as it simply worked just fine with xdist. Though probably I could use treebeard (?) - not sure what the benefit would be for individual notebook execution. `jupyter nbconvert --execute` didn't seem to execute `pip installs`? But I haven't gone too deep in that direction.\r\n\r\nFixes https://github.com/quantumlib/Cirq/issues/2711.",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:tutorial and examples",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:cirq",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1555",
+    "name": "Type Problem",
+    "taxonomy_class": "incorrect_operator",
+    "description": "Reporter: \"cirq.Result is supposed to be supplied measurement results as a dict from string to a multidimensional numpy array. However it is possible to instead supply the value as a list of lists. In this case cirq.Result equality will still work, but it will fail to when converted to a string (since __str__ uses numpy slicing).\" This happen in IonQ result object",
+    "example_code": "",
+    "fix_hint": "Fix bug of in IonQ result conversion (#3710)",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:interface to quantum computer, quantum state evalu",
+      "incorrect_operator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:cirq"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_156",
+    "name": "Missing Implementation",
+    "taxonomy_class": "incorrect_operator",
+    "description": "Reporter: \"When I try to perform the inverse of the QFT operator, it does not include it in the circuit (and no error appears).\" Fixer: \"The method .adjoint() of the operation QFT was not implemented. The operation QFT has now an adjoint function that can be used to take the inverse of it\"",
+    "example_code": "",
+    "fix_hint": "Add adjoint to the operation `QFT` and fix the `qml.adjoint()` function (#1451)\n\n* QFT adjoint with tests.\r\n\r\n* Expand in test.\r\n\r\n* Comments and name of tests.\r\n\r\n* Typoo.\r\n\r\n* Update tests/ops/test_qubit_ops.py\r\n\r\nCo-authored-by: antalszava <antalszava@gmail.com>\r\n\r\n* Correct adjoint function.\r\n\r\n* Update changelog.\r\n\r\n* Correction.\r\n\r\n* Correction for adjoint function.\r\n\r\n* black\r\n\r\n* Unused import.\r\n\r\n* Update .github/CHANGELOG.md\r\n\r\nCo-authored-by: antalszava <antalszava@gmail.com>\r\n\r\n* Update .github/CHANGELOG.md\r\n\r\nCo-authored-by: antalszava <antalszava@gmail.com>\r\nCo-authored-by: Josh Izaac <josh146@gmail.com>",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:quantum abstractions",
+      "incorrect_operator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:pennylane"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1571",
+    "name": "Misconfiguration, Misconfiguration - Installation",
+    "taxonomy_class": "unknown",
+    "description": "This bug happens in a python file which import libraries in a diret way with importlib, because of compatibility issues.",
+    "example_code": "",
+    "fix_hint": "Fix load_module wrapping (#3948)\n\nFor old type (g3) module loaders, the resolution wasn't working, breaking internal par tests. \r\n\r\nThis makes `DeprecatedModuleLoader.load_module` work similarly to `exec_module` that it ensures that when the old module is loaded, both the new and old names are pointing to the same module in the module cache.\r\n\r\ncc @cduck - this should be straightforward. The reason it didn't come up earlier, as I haven't tested on g3 since my change in https://github.com/quantumlib/Cirq/pull/3917#discussion_r597349479 - I think that more principled rewiring surfaced this bug :)",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:infrastructural scripts and glue code",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:cirq",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1652",
+    "name": "Incorrect Application Logic, Incorrect IR - Wrong Information",
+    "taxonomy_class": "incorrect_operator",
+    "description": "Bug: The cache of the quantum task was not updated correctly, when the user requested the metadata asking for the non cache data, the data were not update in the cache.",
+    "example_code": "",
+    "fix_hint": "fix: Correctly cache status (#174)",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:interface to quantum computer",
+      "incorrect_operator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:amazon-braket-sdk-python"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1659",
+    "name": "Incorrect Resource Access",
+    "taxonomy_class": "unknown",
+    "description": "Fixer: \"AwsDevice.get_devices() creates a new AwsSession object for each region that devices can be found and then creates an AwsDevice object for each device found, using the last AwsSession created. However, there is no guarantee that each device even exists in the session's region. This is fine for QPUs, since the correct region is automatically used; this is not the case for simulators, which have been assumed to exist in every region. TN1 does not exist in every region, get_devices() will always fail. This commit fixes the bug by only instantiating simulators that are available in the current region in AwsDevice.get_devices.\"",
+    "example_code": "",
+    "fix_hint": "fix: Use current region for simulators in get_devices (#187)\n\nAwsDevice.get_devices() creates a new AwsSession object for each region\r\nthat devices can be found and then creates an AwsDevice object for each\r\ndevice found, using the last AwsSession created. However, there is no\r\nguarantee that each device even exists in the session's region.\r\n\r\nThis is fine for QPUs, since the correct region is automatically used;\r\nthis is not the case for simulators, which have been assumed to exist in\r\nevery region. TN1 does not exist in every region, get_devices() will\r\nalways fail.\r\n\r\nThis commit fixes the bug by only instantiating simulators that are\r\navailable in the current region in AwsDevice.get_devices.\r\n\r\nAlso added integ tests for TN1.",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:interface to quantum computer",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:amazon-braket-sdk-python",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1660",
+    "name": "Overlooked Corner Case",
+    "taxonomy_class": "unknown",
+    "description": "Fixer: 'If the region is not the same as the current session's region and only simulators are requested, then search_devices will not be called at all because simulators are only retrieved for the current region\".",
+    "example_code": "",
+    "fix_hint": "fix: Do not search for simulators in wrong region (#188)\n\nDo not call search_devices at all if requesting simulators only and in a different region.",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:interface to quantum computer",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:amazon-braket-sdk-python",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1662",
+    "name": "API Misuse - Internal",
+    "taxonomy_class": "incorrect_operator",
+    "description": "For a test which require a random circuit we need to select a random qubit to act on. To do that we use random.randint(a, b), but it gets a <= x <= b, extrema included. The bug was that the developer thought that b was excluded (similarly to range), and then it crashed.",
+    "example_code": "",
+    "fix_hint": "fix: Update range of random qubit in test_qft_iqft_h (#192)",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:testing",
+      "incorrect_operator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:amazon-braket-sdk-python"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1663",
+    "name": "API Misuse - External, Wrong Concept",
+    "taxonomy_class": "incorrect_operator",
+    "description": "The job is submitted to the server and run there. It uses the library ayncio in python. The bug consists in using the event_loop of the client instead of that of the server (https://docs.python.org/3/library/asyncio-eventloop.html#asyncio.Server.get_loop )",
+    "example_code": "",
+    "fix_hint": "fix: get correct event loop for task results after running a batch over multiple threads (#199)",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:interface to quantum computer",
+      "incorrect_operator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:amazon-braket-sdk-python"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1680",
+    "name": "Overlooked Corner Case",
+    "taxonomy_class": "unknown",
+    "description": "A tensor product can be initialized with a list of obeservables, but some obserable can be TensorProduct, which than include other observables within themselves. Therefore a flattening is required to have a TensorProduct represented as a flat list of the observables in it. The bug-fix propose a flattening routine to obtain the atomic observable of each TensorProduct during initialization. The observables give the measurement context.",
+    "example_code": "",
+    "fix_hint": "fix: Flatten Tensor Products (#263)\n\nCo-authored-by: Abe Coull <accoull@amazon.com>\r\nCo-authored-by: ℂ𝓞𝔇𝚈 <speller26@gmail.com>",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:quantum state evaluation",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:amazon-braket-sdk-python",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1682",
+    "name": "Incorrect IR - Wrong Information",
+    "taxonomy_class": "incorrect_operator",
+    "description": "A default parameter is a dictionary, and by default they want it to be empty but initializing it in the method signature is wrong, because multiple method calls share the same representation.",
+    "example_code": "",
+    "fix_hint": "fix: Remove immutable default args (#268)\n\nChanged mutable default arguments (i.e. `def func(a={})`) to immutable ones (`def func(a=None)`) to avoid [unexpected bugs](https://docs.python-guide.org/writing/gotchas/#mutable-default-arguments) down the line.",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:quantum abstractions",
+      "incorrect_operator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:amazon-braket-sdk-python"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1685",
+    "name": "Incorrect Numerical Computation, Imprecise Result",
+    "taxonomy_class": "incorrect_operator",
+    "description": "Fix the number of folding for the unitary folding procedure (use in the error mitigation via zero noise estimation procedure). Fixer: \"Fixes bug with small stretches by adding a check of num_to_fold is zero + rounds num_to_fold up or down instead of always rounding down to nearest integer.\"",
+    "example_code": "",
+    "fix_hint": "Fixes bug with small stretches (#30)\n\n* Fixes bug with small stretches by adding a check of num_to_fold is zero + rounds num_to_fold up or\r\ndown instead of always rounding down to nearest integer.\r\n\r\n* Defines _get_num_to_fold function and uses it in folding_cirq.py to get the number of gates to fold.\r\n\r\n* Uses _get_num_to_fold in folding_pyquil.py to get the number of gates to fold.",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:quantum state evaluation",
+      "incorrect_operator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:mitiq"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1697",
+    "name": "Incorrect Randomenss Handling, Flaky Test",
+    "taxonomy_class": "unknown",
+    "description": "In the demo in the getting started guide, there is a circuit with an assert, which 1% of the time it fails",
+    "example_code": "",
+    "fix_hint": "Seed Qiskit simulator to fix non-deterministic test failure. (#425)",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:tutorial and examples",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:mitiq",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1705",
+    "name": "API Outdated - Internal",
+    "taxonomy_class": "unknown",
+    "description": "Wrong qiskit version reported",
+    "example_code": "",
+    "fix_hint": "mitiq about fixes (#598)",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:infrastructural scripts and glue code",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:mitiq",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1721",
+    "name": "Typo, Wrong Identifier",
+    "taxonomy_class": "incorrect_qubit_mapping",
+    "description": "In the Hamiltonian class, the mapping of qubits method generates a dictionary for the mapping, while generating it they use a wrong key.",
+    "example_code": "",
+    "fix_hint": "Merge pull request #8 from aspuru-guzik-group/hotfix-qubit-maps\n\nfix qubit mapping in hamiltonian",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:domain-specific abstractions",
+      "incorrect_qubit_mapping",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:tequila"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1734",
+    "name": "API Outdated - External",
+    "taxonomy_class": "unknown",
+    "description": "Fixer: \"adapted to newest qiskit version\"",
+    "example_code": "",
+    "fix_hint": "Merge pull request #95 from aspuru-guzik-group/pr-qiskit-hotfix\n\nadapted to newest qiskit version",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:simulator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:tequila",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1735",
+    "name": "Incorrect IR - Wrong Information",
+    "taxonomy_class": "incorrect_operator",
+    "description": "Fixer: \"fixing bug occuring for precompiled samples objetives without measurement optimization\"",
+    "example_code": "",
+    "fix_hint": "Merge pull request #97 from aspuru-guzik-group/pr-samples-hotfix\n\nfixing bug occuring for precompiled samples objetives without measure…",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:simulator, quantum state evaluation",
+      "incorrect_operator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:tequila"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1745",
+    "name": "Incorrect Application Logic",
+    "taxonomy_class": "unknown",
+    "description": "This bug happens during the conversion from a Openfermion representation to the representation of the current platform.",
+    "example_code": "",
+    "fix_hint": "fix geometry formatting bug in ParametersQC (#176)",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:intermediate representation",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:tequila",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1750",
+    "name": "Misconfiguration, Misconfiguration - Building",
+    "taxonomy_class": "unknown",
+    "description": "Bug-fix: In a script the version selected should have been greater than or equal to.",
+    "example_code": "",
+    "fix_hint": "Merge pull request #32 from TenninYan/fix/gcc-8-error\n\nerror in exact 8.0.0",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:infrastructural scripts and glue code",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qulacs",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1752",
+    "name": "Misconfiguration, Misconfiguration - Building",
+    "taxonomy_class": "unknown",
+    "description": "Fixer: \"Use VERSION_LESS, instead of VERSION_GREATER_EQUAL(It doesn't work on cmake==3.5.1)\"",
+    "example_code": "",
+    "fix_hint": "Merge pull request #35 from yurisan/installation_small_bugfix\n\nFix bug in Installation",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:infrastructural scripts and glue code",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qulacs",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1762",
+    "name": "Incorrect IR - Missing Information, Wrong Static Mapping",
+    "taxonomy_class": "incorrect_operator",
+    "description": "In the binding code (pybind11), there were two identical signatures pointing to the same function. Bug-fi: one of them instead should have an additional number.",
+    "example_code": "",
+    "fix_hint": "Merge pull request #64 from kosukemtr/bugfix_63_add_gate_kosukemtr\n\n#63 bugfix for add_gate",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:intermediate representation",
+      "incorrect_operator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qulacs"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1774",
+    "name": "Memory Leak, Misconfiguration, Misconfiguration - Installation",
+    "taxonomy_class": "unknown",
+    "description": "Fixer: \"[bugfix] Change return value policy for avoiding memory leak\"",
+    "example_code": "",
+    "fix_hint": "Merge pull request #101 from corryvrequan/bugfix/take_ownership_of_new_gate_instance\n\n[bugfix] Change return value policy for avoiding memory leak",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:intermediate representation",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qulacs",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1775",
+    "name": "Typo, Qubit Count Related",
+    "taxonomy_class": "incorrect_operator",
+    "description": "Reporter: \"I got error in QuantumState.get_zero_probability function, and it seems to be due to a simple mistake in bound-check of the index.\" The print is of the error is correct but the condition is contradictory.",
+    "example_code": "",
+    "fix_hint": "Merge pull request #107 from corryvrequan/bugfix/get_zero_probability\n\n[bugfix] fix bugs in get_zero_probability",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:quantum abstractions",
+      "incorrect_operator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qulacs"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1780",
+    "name": "GPU related, Overlooked Corner Case",
+    "taxonomy_class": "unknown",
+    "description": "Fixer: \"Parametric gate such as ParametricRX or ParametricPauliRotation were not compatible with QuantumStateGpu.\"",
+    "example_code": "",
+    "fix_hint": "Merge pull request #138 from corryvrequan/bugfix/parametric_gate_gpu\n\nThanks!",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:quantum abstractions, simulator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qulacs",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1786",
+    "name": "Misconfiguration, Misconfiguration - Building",
+    "taxonomy_class": "unknown",
+    "description": "Fixer: \"Fix a problem in CMake script which didn't work when path contains \"./src/\"\"",
+    "example_code": "",
+    "fix_hint": "Merge pull request #155 from corryvrequan/bugfix/cmake_build_with_src_path\n\nFix a problem in CMake script which didn't work when path contains \"./src/\"",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:infrastructural scripts and glue code",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qulacs",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1803",
+    "name": "Misconfiguration, Misconfiguration - Installation",
+    "taxonomy_class": "unknown",
+    "description": "This modification affects the setup.py files. The gcc path can be specified by the user. When specified, it is used only in a part of the library, whereas the rest of the library uses the default (system wide) gcc path and this might lead to inconsistencies, when the two paths are different.",
+    "example_code": "",
+    "fix_hint": "Merge pull request #229 from qulacs/fix_gcc_version_detection_gpu\n\nFix compiler specification in setup_gpu.py and setup_singlethread.py",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:infrastructural scripts and glue code",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qulacs",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1808",
+    "name": "Incorrect Application Logic, Memory Leak",
+    "taxonomy_class": "unknown",
+    "description": "Memory leak, allocated C++ variable not deallocated.",
+    "example_code": "",
+    "fix_hint": "Merge pull request #251 from corryvrequan/bugfix/fix_memleak_in_observable\n\nFix memleak in observable",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:quantum abstractions",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qulacs",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1828",
+    "name": "Incorrect Application Logic, Incorrect IR - Missing Information",
+    "taxonomy_class": "incorrect_operator",
+    "description": "Fixer: \"Previously, since there was just a single object, the New_modes.n instance variable would be overwritten each time New.__call__ was called. New_modes.n is currently only used by New_modes.__str__, which is why this bug escaped notice. This should be a drop-in replacement.\" Fix: \"Replaces the ops.New singleton object with a similarly named function that creates a New_modes instance and appends it to the Program.\" The concept swaping here is between New and New_modes function call.",
+    "example_code": "",
+    "fix_hint": "Merge pull request #91 from XanaduAI/new_modes_bugfix\n\nNew_modes bugfix. CodeFactor not working, but other checks pass",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:machine code generation",
+      "incorrect_operator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:strawberryfields"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1829",
+    "name": "API Outdated - Internal",
+    "taxonomy_class": "wrong_initial_state",
+    "description": "The initialization of GaussianTransform doesn't take the hbar parameter anymore, which was used in the test. Bug: the test were not working. Fixer: \"fixes a number of tests that were skipped or marked as broken\"",
+    "example_code": "",
+    "fix_hint": "Fixing broken or skipped tests (#90)\n\n* Fixed broken Decomposition tests. Small doc improvements. Gaussian class hbar handling simplified.\r\n\r\n* Unnecessary test skips removed.\r\n\r\n* ops.Decomposition: ns set properly.\r\n\r\n* Now Gaussian always acts as a Preparation.\r\n\r\n* Integration test fixed.\r\n\r\n* Gaussian.merge() works.\r\n\r\n* Magic number removed. Test the displacement argument of ops.Gaussian.",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:testing",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:strawberryfields",
+      "wrong_initial_state"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_183",
+    "name": "API Outdated - External",
+    "taxonomy_class": "unknown",
+    "description": "Fixer: \"Updates IBMQuantumExperience imports because of last version changes\"",
+    "example_code": "",
+    "fix_hint": "Merge pull request #61 from atilag/fix-test-register-size-error\n\nUpdates IBMQuantumExperience imports because of last version changes",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:quantum abstractions",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qiskit-terra",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1846",
+    "name": "API Misuse - Internal",
+    "taxonomy_class": "incorrect_operator",
+    "description": "The payload for the request library is sent using the wrong parameter.",
+    "example_code": "",
+    "fix_hint": "Fix a json-issue in the cancel_job method of sf.api.connection.Connection (#336)\n\n* Fix a json-issue in the job cancel method\r\n\r\n* remove unused json import\r\n\r\n* fix test\r\n\r\nCo-authored-by: Josh Izaac <josh146@gmail.com>",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:interface to quantum computer",
+      "incorrect_operator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:strawberryfields"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1847",
+    "name": "API Misuse - Internal",
+    "taxonomy_class": "incorrect_operator",
+    "description": "Fix: how to udate the kwarg of a dictionary",
+    "example_code": "",
+    "fix_hint": "fixing assignment bug (#341)",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:interface to quantum computer",
+      "incorrect_operator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:strawberryfields"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1851",
+    "name": "Numerical Error",
+    "taxonomy_class": "measurement_error",
+    "description": "Fixer: \"Fixed a bug in homodyne measurements in the Fock backend, where computed probability values could occasionally include small negative values due to floating point precision error.\"",
+    "example_code": "",
+    "fix_hint": "Fixes bug where negative probabilities can be calculated during Homodyne measurement in the Fock backend (#364)\n\n* Fixes bug where negative probabilities can be calculated by measure_homodyne in the Fock backend\r\n\r\n* typo\r\n\r\n* changelog\r\n\r\n* Update strawberryfields/backends/fockbackend/circuit.py",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:quantum state evaluation",
+      "measurement_error",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:strawberryfields"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1854",
+    "name": "Incorrect Application Logic",
+    "taxonomy_class": "unknown",
+    "description": "In the tf backend, the mean photon number returned for different modes is the same, which is not correct, becuse a problem with indices",
+    "example_code": "",
+    "fix_hint": "Fix for reduced_density_matrix bug  (#470)\n\n* fixing #467 plus test that would have caught it\r\n\r\n* new integ test\r\n\r\n* Apply suggestions from code review\r\n\r\nCo-authored-by: Josh Izaac <josh146@gmail.com>\r\n\r\n* Update CHANGELOG.md\r\n\r\n* Update CHANGELOG.md\r\n\r\n* Fix reduced dm (#471)\r\n\r\n* Fix reduced_dm\r\n\r\n* Add test\r\n\r\n* Update strawberryfields/backends/tfbackend/ops.py\r\n\r\nCo-authored-by: Josh Izaac <josh146@gmail.com>\r\n\r\n* Update changelog\r\n\r\n* Update test\r\n\r\n* Fix tf\r\n\r\n* Update changelog\r\n\r\n* Update tests/backend/test_tf_ops.py\r\n\r\nCo-authored-by: Nathan Killoran <co9olguy@users.noreply.github.com>\r\n\r\n* Remove fock testing\r\n\r\n* Update tests/backend/test_tf_ops.py\r\n\r\nCo-authored-by: Nathan Killoran <co9olguy@users.noreply.github.com>\r\n\r\n* Simplify test\r\n\r\n* Revert line\r\n\r\nCo-authored-by: Josh Izaac <josh146@gmail.com>\r\nCo-authored-by: Nathan Killoran <co9olguy@users.noreply.github.com>\r\n\r\n* linting\r\n\r\nCo-authored-by: Josh Izaac <josh146@gmail.com>\r\nCo-authored-by: Theodor <theodor@xanadu.ai>",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:intermediate representation",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:strawberryfields",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1858",
+    "name": "Type Problem",
+    "taxonomy_class": "incorrect_operator",
+    "description": "Fixer: \"Fixes a bug where `Dgate`, `Coherent`, and `DisplacedSqueezed` do not support TensorFlow tensors if the tensor has an added dimension due to the existence of batching.\" The bug fix conssted in further checks on the type and numpy .",
+    "example_code": "",
+    "fix_hint": "Fix bug in Dgate, Coherent, and DisplacedSqueezed (#507)\n\n* Support TF tensors in batch form\r\n\r\nCo-authored-by: Josh Izaac <josh146@gmail.com>\r\n\r\n* Add test\r\n\r\n* Add to changelog\r\n\r\n* Update PR in changelog\r\n\r\n* New line\r\n\r\n* Extend to other gates\r\n\r\n* Update changelog\r\n\r\n* Update\r\n\r\n* Update test\r\n\r\n* Update .github/CHANGELOG.md\r\n\r\nCo-authored-by: Josh Izaac <josh146@gmail.com>\r\n\r\n* Fix typo\r\n\r\n* Fix\r\n\r\nCo-authored-by: Josh Izaac <josh146@gmail.com>",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:quantum abstractions",
+      "incorrect_operator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:strawberryfields"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1860",
+    "name": "Type Problem",
+    "taxonomy_class": "incorrect_operator",
+    "description": "Reporter: \"The functions strawberryfields.ops.Catstate andstrawberryfields.utils.states.cat_state do not work properly with a large Fock dimension cut-off. Inside these functions, the ket's array is initialized as type int32 due to (I think) an earlier use of np.arange with int32 argument. As a result, some of the maths that is performed further on in the function evaluates to 0 when the number is sufficiently large.\" Fixer: \"Fix cat state function array type without doing casting\"",
+    "example_code": "",
+    "fix_hint": "Fix cat state function array type without doing casting (#556)\n\n* Fixed cat state function array type (#554)\r\n\r\n* Fixed cat state function array type (XanaduAI#554)\r\n\r\n* Update ops.py\r\n\r\n* Update states.py\r\n\r\n* multiply by 1.0\r\n\r\n* Apply suggestions from code review\r\n\r\nCo-authored-by: antalszava <antalszava@gmail.com>\r\n\r\nCo-authored-by: tguillaume <tguillaume506@gmail.com>\r\nCo-authored-by: antalszava <antalszava@gmail.com>",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:quantum abstractions",
+      "incorrect_operator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:strawberryfields"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1878",
+    "name": "Misconfiguration, Misconfiguration - Building",
+    "taxonomy_class": "unknown",
+    "description": "Reporter: \"If we build xacc from scratch in debug mode, then downstream plugins report usResourceCompiler-NOTFOUND when trying to use the CppMicroServices usResourceCompiler4 executable target.\"",
+    "example_code": "",
+    "fix_hint": "fixing bug #161 to ensure plugins built off debug build of xacc can themselves build\n\nSigned-off-by: Alex McCaskey <mccaskeyaj@ornl.gov>",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:infrastructural scripts and glue code",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:xacc",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1882",
+    "name": "Misconfiguration, Misconfiguration - Building",
+    "taxonomy_class": "unknown",
+    "description": "During the mac build procedure. Reporter: \"xacc-quantum-py shared lib build config missed the 'magic' rpath config.\"",
+    "example_code": "",
+    "fix_hint": "Merge pull request #233 from tnguyen-ornl/tnguyen/fix-apple-build\n\nFixed MacOS build",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:infrastructural scripts and glue code",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:xacc",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1894",
+    "name": "Incorrect Application Logic",
+    "taxonomy_class": "unknown",
+    "description": "Fixer: \"Fixed QAOA example to work with ExaTN visitor;\"",
+    "example_code": "",
+    "fix_hint": "Merge pull request #288 from DmitryLyakh/qaoa_fix\n\nFixed QAOA example",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:tutorial and examples",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:xacc",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1896",
+    "name": "Misconfiguration, Misconfiguration - Installation",
+    "taxonomy_class": "unknown",
+    "description": "Fixer: \"Fixed py-aer wrapper for Linux\"",
+    "example_code": "",
+    "fix_hint": "Merge pull request #298 from tnguyen-ornl/tnguyen/fix-aer-py-linux\n\nFixed py-aer wrapper for Linux.",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:infrastructural scripts and glue code",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:xacc",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1897",
+    "name": "Misconfiguration, Misconfiguration - Building",
+    "taxonomy_class": "unknown",
+    "description": "Fixer: \"Only test QNG (QuantumNatualGradient) module if LAPACK was installed.\"",
+    "example_code": "",
+    "fix_hint": "Merge pull request #299 from tnguyen-ornl/tnguyen/fix-qng-build\n\nPotential fix for #296",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:infrastructural scripts and glue code, testing",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:xacc",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1908",
+    "name": "Misconfiguration, Misconfiguration - Building",
+    "taxonomy_class": "unknown",
+    "description": "The build procedure crashes on VirtualBox  because it uses a flag which is not present there.",
+    "example_code": "",
+    "fix_hint": "Merge pull request #362 from tnguyen-ornl/tnguyen/fix-virtual-box-qsim-build\n\nPotential fix for the qsim build on VirtualBox",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:infrastructural scripts and glue code",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:xacc",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1909",
+    "name": "Type Problem",
+    "taxonomy_class": "incorrect_operator",
+    "description": "Related to the C++ to Python mapping. The user writes code in python, then we have to map that call back to some code in C++, since Python doesn't have any type we have to match each vairable from Python to some type known to the C++ language. To do this mapping we have an ORDERED list of types which we try to map to. Bug map to vector<double> has higher priority than vector<complex>, so we might lose information by casting to double, because some times we need to reason on complex numbers. Thus the bug fix swap that order and converts to complex first, to let the C++ backend interpret the variable correctly.",
+    "example_code": "",
+    "fix_hint": "Merge pull request #370 from tnguyen-ornl/tnguyen/pulse-fixes\n\nMinor fixes for pulse sim",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:intermediate representation",
+      "incorrect_operator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:xacc"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1909_5",
+    "name": "API Outdated - External",
+    "taxonomy_class": "incorrect_operator",
+    "description": "A new gate set was added so a new command (rz) is now available. Due to the new gate (IBM interface) set the parsing process should be aware of it.",
+    "example_code": "",
+    "fix_hint": "Merge pull request #370 from tnguyen-ornl/tnguyen/pulse-fixes\n\nMinor fixes for pulse sim",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:interface to quantum computer",
+      "incorrect_operator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:xacc"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1915",
+    "name": "Incorrect IR - Missing Information",
+    "taxonomy_class": "incorrect_operator",
+    "description": "The compiler (which in this framework is named qcor) assignes a random name to a register representing a buffer, but during an optimization step the name of the register is lost, and substituted with a generic \"q\".",
+    "example_code": "",
+    "fix_hint": "Merge pull request #403 from tnguyen-ornl/tnguyen/fix-gate-merge-opt-qcor\n\nFixed a bug when the gate merge optimizer didn't persist the buffer name",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:optimizations",
+      "incorrect_operator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:xacc"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1917",
+    "name": "Overlooked Corner Case",
+    "taxonomy_class": "unknown",
+    "description": "In the binding between C++ code and Python (with pybind11), sometimes the C++ code has overloading of methods. To do that we need a special procedure for the binding ( https://pybind11.readthedocs.io/en/stable/classes.html#overloaded-methods ). The bug is present because sometimes we handle the case in which the list (passed as parameter) is a list of Qasm or Quil object, but we did not address the case where it is neither of them two. The bug fix addresses it providing a casting.",
+    "example_code": "",
+    "fix_hint": "Merge pull request #411 from tnguyen-ornl/tnguyen/fix-binding\n\nFixes a pybind11 overload resolution issue",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:intermediate representation",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:xacc",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1918",
+    "name": "Missing Implementation",
+    "taxonomy_class": "unknown",
+    "description": "Fixer: \"Add postProcess impl to Python observable plugins\"",
+    "example_code": "",
+    "fix_hint": "Merge pull request #423 from tnguyen-ornl/tnguyen/fix-py-obs\n\nAdd postProcess impl to Python observable plugins",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:domain-specific abstractions, quantum state evalua",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:xacc",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1928",
+    "name": "API Misuse - Internal",
+    "taxonomy_class": "incorrect_operator",
+    "description": "Fixer: \"bugfix to accomodate how python3 no longer returns an int after division\"",
+    "example_code": "",
+    "fix_hint": "Merge pull request #55 from rigetticomputing/bugfix/python3-rounding\n\nbugfix to accomodate how python3 no longer returns an int after division",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:interface to quantum computer",
+      "incorrect_operator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:pyquil"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1936",
+    "name": "Misconfiguration, Misconfiguration - Installation",
+    "taxonomy_class": "unknown",
+    "description": "Fixer: \"Fix error with setup.py\"",
+    "example_code": "",
+    "fix_hint": "Fix error with setup.py and add pi to parser (#174)",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:infrastructural scripts and glue code",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:pyquil",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_1991",
+    "name": "Incorrect IR - Missing Information, Incorrect Application Logic",
+    "taxonomy_class": "incorrect_operator",
+    "description": "This code affects the measure_observables function of the pauli gate, it is involved in tomographic experiment. Bug: in the code the ExperimentResult objects are initialized with a hardcoded value and the coeff defined in the parameter of measure_obeservables is not passed at the moment of creation. Bug: ExperimentResult(coeff=1) > Fix: ExperimentResult(coeff=coeff)",
+    "example_code": "",
+    "fix_hint": "Fix handling of identity in operator estimation (#758)\n\n* Fix handling of identity in operator estimation\r\n\r\n* Add a test, actually fix the issue",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:quantum state evaluation",
+      "incorrect_operator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:pyquil"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_2004",
+    "name": "Type Problem",
+    "taxonomy_class": "incorrect_operator",
+    "description": "Reporter: \"STORE documentation says source can be constant value. But actually it type errors if source is not a MemoryReference.\" Fix: the check on the type now accepts also istance of int and float, not only MemoryReference",
+    "example_code": "",
+    "fix_hint": "Fix operand types for STORE and comparison instructions (#1010)",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:quantum abstractions",
+      "incorrect_operator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:pyquil"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_2007",
+    "name": "API Misuse - Internal",
+    "taxonomy_class": "incorrect_operator",
+    "description": "Fix a parameter in an example notebook",
+    "example_code": "",
+    "fix_hint": "Fixes for migration2-qc.ipynb (#1138)",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:tutorial and examples",
+      "incorrect_operator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:pyquil"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_2018",
+    "name": "Incorrect Application Logic, Type Problem, Overlooked Corner Case",
+    "taxonomy_class": "incorrect_operator",
+    "description": "Problem in the parsing of quil code (low level code similar to QASM). Fixer: \"When we passed string of hamiltonian whose coefficient is 0 or its real value is 0 to Observable::create_observable_from_openfermion_text, the kernel crashes.\"",
+    "example_code": "",
+    "fix_hint": "Fix #1295 by mapping Parameters to strings (#1296)",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:intermediate representation",
+      "incorrect_operator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:pyquil"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_2032",
+    "name": "Incorrect IR - Wrong Information",
+    "taxonomy_class": "incorrect_operator",
+    "description": "The solver object is updated with additional data which are received via client-server communication. The interpretation of the information coming from the server responsed has to be used in a different way internally. Fix: use the node attribute of the solver object, instead of encoding_qubits, to avoid duplicates. (solver class: self.nodes = self.variables = set(self._encoding_qubits))",
+    "example_code": "",
+    "fix_hint": "Merge pull request #6 from arcondello/incomplete_solver_bugfix\n\nIncomplete solver bugfix",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:quantum abstractions",
+      "incorrect_operator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:dwave-system"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_2033",
+    "name": "Typo, Wrong Identifier",
+    "taxonomy_class": "incorrect_qubit_mapping",
+    "description": "Fixer: \"Fix typo where initial_state_kwargs was not correct iterated over\"",
+    "example_code": "",
+    "fix_hint": "Merge pull request #16 from dwavesystems/initial_state_kwarg_bugfix\n\nFix typo where initial_state_kwargs was not correct iterated over",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:quantum abstractions",
+      "incorrect_qubit_mapping",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:dwave-system"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_2052",
+    "name": "API Misuse - Internal, Flaky Test",
+    "taxonomy_class": "incorrect_operator",
+    "description": "Fixer: \"Bug root cause: the test that was failing, embedding composite with initial_state and annealing_schedule, was not properly fetching/using a solver that supports those features. The reason why this test was passing before is pure luck. It was using the cloud-client v0.5.0 which was returning solvers in different order, so by chance a QPU solver was the default. In v0.5.1 the order changed, and required solver features had to be explicitly listed.\"",
+    "example_code": "",
+    "fix_hint": "Merge pull request #230 from randomir/bugfix-embedding-composite-initial-state-sampling-test\n\nBugfix embedding composite initial state sampling test",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:testing",
+      "incorrect_operator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:dwave-system"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_2064",
+    "name": "Misconfiguration, String Bug",
+    "taxonomy_class": "unknown",
+    "description": "AutoEmbeddingComposite(DWaveSampler()).sample(dimod.BQM({}, {(0, 1): 1}, 0, 'BINARY')) > app_crash whereas with 'SPIN' instead of 'BINARY' it works. It is inconsistent since BINARY and SPIN is just a convention to represnet variable types. (-1, 1) instead of (0, 1)",
+    "example_code": "",
+    "fix_hint": "Merge pull request #373 from randomir/fix-version-filter-in-hybrid-samplers/issue-372\n\nFix hybrid solvers selection (version sort)",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:quantum abstractions",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:dwave-system",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_2066",
+    "name": "Misconfiguration, Misconfiguration - Installation, String Bug",
+    "taxonomy_class": "unknown",
+    "description": "Reporter: \"dwave-preprocessing was promoted to a full dependency in dimod==0.10.5 and the preprocessing extra install argument was removed.\" So the code install_requires = ['dimod[preprocessing]>=0.9.11 --> became --> install_requires = ['dimod>=0.9.11, . Fixer: \"This will fix a pkg_resources.UnknownExtra error that comes up when another package requires dwave-system but dwave-preprocessing is not installed (despite dwave-preprocessing not being a requirement).\"",
+    "example_code": "",
+    "fix_hint": "Merge pull request #418 from hhtong/fix_preprocessinig\n\nRemove use of dimod's preprocessing extra install arg",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:infrastructural scripts and glue code",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:dwave-system",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_2067",
+    "name": "Incorrect Application Logic",
+    "taxonomy_class": "unknown",
+    "description": "Reporter: \"LeapHybridSampler and LeapHybridDQMSampler update required solver features on kwargs level only, effectively ignoring user's config from file/env.\"",
+    "example_code": "",
+    "fix_hint": "Merge pull request #422 from randomir/bugfix/allow-config-solver-override-hybrid-samplers/issue-363\n\nAllow config solver override in hybrid samplers",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:quantum abstractions",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:dwave-system",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_2068",
+    "name": "Overlooked Corner Case",
+    "taxonomy_class": "unknown",
+    "description": "Fixer: \"Make QPU tests insensitive to QPU topology availability\". So that if the qpu is not available the test is skipped and not failed.",
+    "example_code": "",
+    "fix_hint": "Merge pull request #423 from randomir/bugfix/qpu-tests-failing-when-2000q-missing\n\nMake QPU tests insensitive to QPU topology availability",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:testing",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:dwave-system",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_2069",
+    "name": "Overlooked Corner Case",
+    "taxonomy_class": "unknown",
+    "description": "Reporter: \"in the slicing method, the line \"long rangeCount = 1 + (range.End - range.Start) / range.Step;\" is not correct; it mistakenly computes that e.g. the range 1 .. 2 .. 0 has one element, which subsequently causes an ArgumentOutOfRangeException exception.\"",
+    "example_code": "",
+    "fix_hint": "Fixing empty array slices (#55)\n\n* empty array slices\r\n\r\n* doc comment",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:classical abstractions",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qsharp-runtime",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_2070",
+    "name": "Overlooked Corner Case",
+    "taxonomy_class": "unknown",
+    "description": "Reporter: 'While writing unit tests for a generic-typed function, I ran into some strange behavior. The function works perfectly when called from the same file, but it seems to return a QVoid when called from the test suite, instead of the expected Bool.\"",
+    "example_code": "",
+    "fix_hint": "Fixing #76 (#88)",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:machine code generation",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qsharp-runtime",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_2076",
+    "name": "String Encoding Related",
+    "taxonomy_class": "unknown",
+    "description": "Fixer: \"The test was failing locally on my machine due to mismatch between the oracle strings (\\r) and the text dumped into the file (\\r\\n). I've changed the string to use Environment.NewLine.\"",
+    "example_code": "",
+    "fix_hint": "fix mismatch in line break format between oracle and result in ToffoliDumpState test (#133)",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:testing",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qsharp-runtime",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_2077",
+    "name": "Incorrect Application Logic",
+    "taxonomy_class": "unknown",
+    "description": "FIxer: \"This change modifies exception handling to use \"throw\" without arguments to re-throw exceptions without changing stack trace. This is needed for correct matching between C# and Q# stacks, which is needed to report correct locations in Q# stack\"",
+    "example_code": "",
+    "fix_hint": "Merge pull request #147 from microsoft/dmitryv/QSExceptionHandlingFix\n\nUpdated exception handling code generation",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:intermediate representation",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qsharp-runtime",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_2087",
+    "name": "Incorrect Application Logic",
+    "taxonomy_class": "unknown",
+    "description": "When defining a UDT (user defined type) with a named item whose type is a non-singleton tuple, the C# code generation step produces invalid properties that then fail to compile when running dotnet build.",
+    "example_code": "",
+    "fix_hint": "Fix C# Generation for UDT Tuple Field (#270)\n\nFixed an issue with the C# generation for UDT classes where tuple fields of the UDT where not being correctly parsed. Added some tests for this situation.",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:machine code generation",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qsharp-runtime",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_2089",
+    "name": "Incorrect Randomenss Handling",
+    "taxonomy_class": "unknown",
+    "description": "Reporter: \"Message($\"{Random([1.0, 2.0, 2.0])}\"); I'm getting 0, 1, 3 - I'm guessing that the final element is erroneously increased by 1? this bug only happens on the ResourceEstimator\"",
+    "example_code": "",
+    "fix_hint": "Fix #256. (#257)\n\n* Fix #256.\r\n\r\n* Added regression test.\r\n\r\n* Fixed test target.\r\n\r\n* Add internal fact.\r\n\r\n* Fix fact.\r\n\r\nCo-authored-by: bettinaheim <34236215+bettinaheim@users.noreply.github.com>",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:simulator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qsharp-runtime",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_2100",
+    "name": "API Misuse - Internal",
+    "taxonomy_class": "incorrect_operator",
+    "description": "Fixer: \"This PR updates a unit case than contained a statement that shouldn't be supported\" (refering to the call of GenRecursionPartial without syntax <> )",
+    "example_code": "",
+    "fix_hint": "Fixing a unit test and the solution paths (#351)",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:testing",
+      "incorrect_operator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qsharp-runtime"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_2101",
+    "name": "Conflicting Statements",
+    "taxonomy_class": "unknown",
+    "description": "Fix: naming conflict between C# and Q# (lots of changes 100 changed files)",
+    "example_code": "",
+    "fix_hint": "Fix naming conflicts with generated C# members (#349)\n\n* Rename based on reserved word list\r\n\r\n* Update namespace encoding\r\n\r\n* Use underscores for Init and Factory\r\n\r\n* Use underscores for specialization names\r\n\r\n* Update underscores for Data{In,Out}\r\n\r\n* Update Body to __Body__ in property reflection\r\n\r\n* Use underscores for Deconstruct\r\n\r\n* Update tests\r\n\r\n* Add new tests\r\n\r\n* Update ItemN regex\r\n\r\n* Always append __ for referenced callable properties\r\n\r\n* Don't append __ when name already contains __\r\n\r\n* Update tests\r\n\r\n* Add tests for #247\r\n\r\n* Update remaining specialization names\r\n\r\n* Add Deconstruct to reserved words\r\n\r\n* Update tests",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:intermediate representation",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qsharp-runtime",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_2102",
+    "name": "Wrong Identifier",
+    "taxonomy_class": "incorrect_qubit_mapping",
+    "description": "Bug: duplicated code, seems to come from copy paste anipattern. The bug is in the depth counter so it reasonably lead to a wrong result of the depth.",
+    "example_code": "",
+    "fix_hint": "v-yusudz/tracer-minor-fixes (#278)",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:simulator",
+      "incorrect_qubit_mapping",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qsharp-runtime"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_2105",
+    "name": "Misconfiguration, Misconfiguration - Building",
+    "taxonomy_class": "unknown",
+    "description": "Fix build procedure, because of IonQ device do not have certain operations",
+    "example_code": "",
+    "fix_hint": "Fixing build break for IonQ when using MReset* (#407)",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:simulator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qsharp-runtime",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_2114",
+    "name": "Misconfiguration, Misconfiguration - Testing",
+    "taxonomy_class": "unknown",
+    "description": "The test were not running",
+    "example_code": "",
+    "fix_hint": "Tracer: Fix the target.qs file and link in QIS lib (#533)",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:testing",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qsharp-runtime",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_2117",
+    "name": "Overlooked Corner Case",
+    "taxonomy_class": "unknown",
+    "description": "Fixer: in case of dynamic type (corner case) \"If inheritance is used, the `this` in QCTraceSimulatorImpl wont resolve to the right assembly. This uses the QCTraceSimulatorImpl type itself so that the assembly matching the QDK can be resolved.\" Using the wrong assembly will likely lead an incorrect result or crash.",
+    "example_code": "",
+    "fix_hint": "Fix for dynamic type load when inheritance used (#576)\n\nIf inheritance is used, the `this` in QCTraceSimulatorImpl wont resolve to the right assembly. This uses the QCTraceSimulatorImpl type itself so that the assembly matching the QDK can be resolved.",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:simulator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qsharp-runtime",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_2129",
+    "name": "Conflicting Statements",
+    "taxonomy_class": "unknown",
+    "description": "Reporter: \"These two imports are unused and cause an error when running bootstrap.ps1 on MacOS.\"",
+    "example_code": "",
+    "fix_hint": "Fix #744. (#745)",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:infrastructural scripts and glue code",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qsharp-runtime",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_234",
+    "name": "Typo, Wrong Identifier",
+    "taxonomy_class": "incorrect_qubit_mapping",
+    "description": "Fixer: \"The Clifford backend is currently searching for errors in the id (idle) gate using the string \"idle\". However, both in the Qubit backend and in the README it is referred to as \"id\". This is solved simply by changing \"idle\" to \"id\" in the relevant lines in the Clifford engine.\"",
+    "example_code": "",
+    "fix_hint": "Bugfix for idle gate noise in Clifford simulator (#440)",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:simulator",
+      "incorrect_qubit_mapping",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qiskit-terra"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_27",
+    "name": "Incorrect Randomenss Handling",
+    "taxonomy_class": "incorrect_operator",
+    "description": "Fixer: \"fix a bug at func:`qiskit.ignis.verification.randomized_benchmarking.randomized_benchmarking_seq` which caused all the subsystems with the same size in the given rb_pattern to have the same gates when a 'rand_seed' parameter was given to the function.",
+    "example_code": "",
+    "fix_hint": "fixed but different seed for each qubit in RB seed (#492)",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:testing",
+      "incorrect_operator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qiskit-ignis"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_30",
+    "name": "API Outdated - External",
+    "taxonomy_class": "unknown",
+    "description": "Reporter: \"Since Qiskit/qiskit-terra#5432 was merged in Terra, the CNOT-Dihedral tests in ignis are failing with the following error: AttributeError: 'CNOTDihedral' object has no attribute '_op_shape'. The code of the CNOTDihedral class in ignis should be fixed to support the new OpShape class.\"",
+    "example_code": "",
+    "fix_hint": "Fix CNOTDihedral class to support OpShape (#550)",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:quantum abstractions",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qiskit-ignis",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_32",
+    "name": "Incorrect Application Logic",
+    "taxonomy_class": "unknown",
+    "description": "Reporter: \"The weight_syndrome_graph method of Decoder objects in topological_codes has not been successfully migrated to networkx.\"",
+    "example_code": "",
+    "fix_hint": "Fix weight calculation (#567)\n\nThe weight_syndrome_graph method of Decoder objects previously\r\ndid not have an explicit test. This allowed a problem with the retworkx\r\nmigration to remain undetected (see #565 ).\r\n\r\n- A test has now been added (as well as refactoring to make testing easier).\r\n- A change to the weight calculation method was also made to improve accuracy.\r\n\r\nFixes #565\r\n\r\n* Update circuits.py\r\n\r\nTesting commit\r\n\r\n* Revert \"Update circuits.py\"\r\n\r\nThis reverts commit 32e66b67d8ee3a0c5b1bd45e6b760e8c51c82570.\r\n\r\n* Update circuits.py\r\n\r\n* Update circuits.py\r\n\r\n* Update circuits.py\r\n\r\n* Removing spaces, rename +,- to X-basis\r\n\r\n* Revert \"Adding logical identity, change to +,- basis for repetition code\"\r\n\r\n* improve error calculation\r\n\r\n* change edges to correct form\r\n\r\n* add test for weights\r\n\r\n* fix some linting errors\r\n\r\n* change to update_edge\r\n\r\n* fix more linting errors\r\n\r\n* fix final linting error\r\n\r\n* preventing exceptions for rare cases\r\n\r\n* retrigger checks\r\n\r\n* Update qiskit/ignis/verification/topological_codes/fitters.py\r\n\r\nCo-authored-by: Matthew Treinish <mtreinish@kortar.org>\r\n\r\n* Update qiskit/ignis/verification/topological_codes/fitters.py\r\n\r\nCo-authored-by: Matthew Treinish <mtreinish@kortar.org>\r\n\r\n* Update qiskit/ignis/verification/topological_codes/fitters.py\r\n\r\nCo-authored-by: Matthew Treinish <mtreinish@kortar.org>\r\n\r\n* Update qiskit/ignis/verification/topological_codes/fitters.py\r\n\r\nCo-authored-by: Matthew Treinish <mtreinish@kortar.org>\r\n\r\n* Update qiskit/ignis/verification/topological_codes/fitters.py\r\n\r\nCo-authored-by: Matthew Treinish <mtreinish@kortar.org>\r\n\r\n* delete blank line\r\n\r\nCo-authored-by: jagunther <58778456+jagunther@users.noreply.github.com>\r\nCo-authored-by: Christopher J. Wood <cjwood@us.ibm.com>\r\nCo-authored-by: Matthew Treinish <mtreinish@kortar.org>",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:quantum state evaluation",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qiskit-ignis",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_33",
+    "name": "Misconfiguration, Misconfiguration - Testing",
+    "taxonomy_class": "unknown",
+    "description": "In a tox.ini python3.8 was too specific, working only for people who had it. Bug-fix: moved to python 3 which is general",
+    "example_code": "",
+    "fix_hint": "Fix tox.ini lint job's basepython (#576)\n\nIn #568 a change the lint job definition was accidently made which\r\nchanged the base python version for the job from python3 to python 3.8.\r\nThis was done for my local testing as the version of pylint we're\r\ncurrently using doesn't support python 3.9 (which is my default python3\r\ninterpreter). However, this should not have been committed (especially\r\nas part of #568 which is completely unrelated) as it's not general and\r\nwill only work if someone has a python3.8 interpreter installed. This\r\ncommit reverts that change to ensure the tox.ini is usable for anyone.\r\nIn a follow up commit we'll bump the pylint version to one that's python\r\n3.9 compatible so local workarounds like this aren't needed anymore.",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:testing",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qiskit-ignis",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_35",
+    "name": "String Bug",
+    "taxonomy_class": "unknown",
+    "description": "The backend exposes that it can do operations that are not implemented.",
+    "example_code": "",
+    "fix_hint": "fixes #35",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:machine code generation",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:pennylane",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_4",
+    "name": "API Outdated - External",
+    "taxonomy_class": "unknown",
+    "description": "Fix DeprecationWarnings coming from Terra due to old-style bit access",
+    "example_code": "",
+    "fix_hint": "fix bit access (#231)\n\n* fix bit access\r\n\r\n* One more change to get rid of the deprecation errors",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:testing",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qiskit-ignis",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_53",
+    "name": "Type Problem, Incorrect IR - Wrong Information",
+    "taxonomy_class": "incorrect_operator",
+    "description": "When QNode keyword arguments are used to specify wires of operations/expvals, complicated casting rules can cause them to be of type np.int64 rather than the standard Python type int. This can cause issues with external plugin devices, for example, if the targeted framework performs validation to ensure that isinstance(qubit, int).\nTo fix this, we explicitly cast the operation wires directly to integers in Operation.wires.",
+    "example_code": "",
+    "fix_hint": "Keyword argument bug fixes (#206)\n\nKeyword argument bug fixes",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:quantum abstractions",
+      "incorrect_operator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:pennylane"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_567",
+    "name": "Incorrect Application Logic, Overlooked Corner Case",
+    "taxonomy_class": "unknown",
+    "description": "Reporter: \"Simplification done during in the constructor, of the pauli list that is passed, had a bug.\"",
+    "example_code": "",
+    "fix_hint": "Fix to WeightedPauliOperator (Qiskit/qiskit-aqua#891)",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:optimizations",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qiskit-terra",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_679",
+    "name": "Concurrency",
+    "taxonomy_class": "unknown",
+    "description": "Reporter: \"The problem is that the event infrastructure in Terra is global and sometimes we get crashes on the instance variable the TextBarProgress keeps (self.iter) since a single TextProgressBar receives all those events from parallel_map in mixed orders when actually they should apply to separate progress bars.\"",
+    "example_code": "",
+    "fix_hint": "Fix random crashes on TextProgressBar (#5034)\n\nThis is a proposed fix for #5012.\n\nIt allows more than one subscriber per event, so that bad subscribers\ndon't block good subscribers from getting events. It does this by changing\nthe internal _Subscriber class to determine equality based on the callback\nfunction object id, instead of just by name.\n\nTo prevent errors described in #5012, it avoids running the progress bar update if it\nhas not been initialized yet (i.e. start() has not run yet). It also\nskips update when it doesn't make sense (e.g. step iteration is greater than\nthe set total number of iterations on start).\n\nThis is sensitive to object ids in order to work, so as long as the callbacks\nare dynamically defined functions, this will work.\n\nCo-authored-by: Luciano Bello <luciano.bello@ibm.com>",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:visualization and plotting",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qiskit-terra",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_68",
+    "name": "Misconfiguration, Misconfiguration - Testing",
+    "taxonomy_class": "unknown",
+    "description": "Reporter: in the test suite \"QNodes were being created at the module level. This was causing exceptions if PyTorch or TensorFlow was not installed, as they were not within scope of the 'skip_if_not_installed' fixtures.\"",
+    "example_code": "",
+    "fix_hint": "Fixes bug to allow interface tests to work without TF/PyTorch installed (#385)\n\n* Fixes bug to allow test_torch.py to work without pytorch installed\r\n\r\n* make equivalent tf fix",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:testing",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:pennylane",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_7",
+    "name": "Incorrect Application Logic",
+    "taxonomy_class": "unknown",
+    "description": "From fixer: \"Fixed some small errors in randomized benchmarking. Add the ability to load multiple results into a measurement call.\"",
+    "example_code": "",
+    "fix_hint": "Fixed some small errors in rb, add the ability to load multiple resul… (#240)\n\n* Fixed some small errors in rb, add the ability to load multiple results into a measurement cal\r\n\r\n* Complete measurement mitigation uses the tensored code",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:quantum state evaluation",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qiskit-ignis",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_733",
+    "name": "API Misuse - Internal",
+    "taxonomy_class": "incorrect_operator",
+    "description": "Using hasattr: hasattr(field, self._options) --> hasattr(self._options, field)",
+    "example_code": "",
+    "fix_hint": "fix hasattr in get_options (#5370)\n\nCo-authored-by: mergify[bot] <37929162+mergify[bot]@users.noreply.github.com>",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:interface to quantum computer",
+      "incorrect_operator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qiskit-terra"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_76",
+    "name": "API Misuse - External, Wrong Identifier",
+    "taxonomy_class": "incorrect_qubit_mapping",
+    "description": "Fixer: \"Fixes a bug where the QNode collection was returning an inconsistent shape for the autograd interface.\"",
+    "example_code": "",
+    "fix_hint": "Adds an introduction to QNode collections, and fixes a consistency bug (#494)\n\n* Added small mention of QNode collections to the circuits.rst introduction file\r\n\r\n* Change numpy vstack to stack in QNode collection return\r\n\r\n* fix tests\r\n\r\n* suggested changes",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:domain-specific abstractions",
+      "incorrect_qubit_mapping",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:pennylane"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_950",
+    "name": "Misconfiguration, Misconfiguration - Building",
+    "taxonomy_class": "unknown",
+    "description": "Fixer: \"Fix symbol resolution misbehaior for GCC and Clang on MacOS\". Inconsistent behaviour on Macos with cmake file. Reporter: \"this problem is similar to old report saying: gcc builds were failing on MacOS due to a problem with the dynamic symbol resolution.\"",
+    "example_code": "",
+    "fix_hint": "Fix symbol resolution misbehaior for GCC and Clang on MacOS (#158)",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:infrastructural scripts and glue code",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qiskit-aer",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_953",
+    "name": "Overlooked Corner Case",
+    "taxonomy_class": "unknown",
+    "description": "From fixer: \"When a simulation fails for whatever reason, the result object (or Qobj) doesn't have a results field, so we have to properly deal with this scenario.\"",
+    "example_code": "",
+    "fix_hint": "Fix an issue with Failure simulations handling (#167)\n\n* Fix an issue with Failure simulations handling\r\n\r\n* Add tests for simple Success and Failure simulation events by mocking simulators",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:simulator, quantum state evaluation",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qiskit-aer",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_968",
+    "name": "Incorrect Application Logic",
+    "taxonomy_class": "unknown",
+    "description": "From fixer: \"The set_config method of the Data accumulator for the base controller class wasn't being called, so any additional data such as memory=True was being discarded when accumulated.\"",
+    "example_code": "",
+    "fix_hint": "Fix data accumulator not loading config (#322)\n\n* Fix setting config on data accumulator\r\n\r\n* Update measure tests to test memory",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:simulator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qiskit-aer",
+      "unknown"
+    ],
+    "bug_category": "classical"
+  },
+  {
+    "pattern_id": "BQCP_980",
+    "name": "Typo, Wrong Static Mapping",
+    "taxonomy_class": "incorrect_operator",
+    "description": "Fixer: \"Fixes bug where cu3 was being applied as cu1 for unitary_simulator\"",
+    "example_code": "",
+    "fix_hint": "Fix bug in unitary simulator cu3 and add cu3 tests (#483)",
+    "source": "bugsqcp",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:simulator",
+      "incorrect_operator",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qiskit-aer"
+    ],
+    "bug_category": "classical"
+  }
+]
