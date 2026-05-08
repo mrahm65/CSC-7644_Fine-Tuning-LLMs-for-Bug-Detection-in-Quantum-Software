@@ -1,68 +1,206 @@
 # Fine-Tuning LLMs for Bug Detection in Quantum Software
 
-## Overview
+## Project Title and Overview
 
-This is the final project for **CSC 7644: Applied LLM Development**
-(Louisiana State University, Spring 2026). The goal is to classify
-software-engineering bug reports as **classical** or **quantum-specific**
-by fine-tuning three RoBERTa-architecture encoders. Undetected bugs in
-quantum applications such as quantum key distribution (QKD) can silently
-compromise cryptographic guarantees, so automated detection of
-quantum-specific bug patterns is a useful first line of defense for
-quantum software developers, researchers, and educators.
+This repository contains my final project for **CSC 7644: Applied LLM Development** at Louisiana State University.
 
-The comparison holds architecture and parameter count constant
-(~125M parameters per backbone) so any performance difference comes from
-**pretraining data**, not capacity or architecture.
+The project builds and evaluates a supervised LLM-based classifier for distinguishing between **classical software bugs** and **quantum-specific bugs** in Qiskit-centered bug reports. Quantum software can contain domain-specific defects such as incorrect qubit mappings, gate misuse, measurement-ordering errors, and circuit-construction mistakes. These bugs are difficult to triage manually because they require both software-engineering knowledge and quantum-computing domain expertise.
 
-## Key Features
+The goal of this project is to determine whether code-aware pre-training improves bug classification performance. To test this, I fine-tuned and compared three RoBERTa-architecture encoder models:
 
-- Three-backbone benchmark across `roberta-base`,
-  `microsoft/codebert-base`, and `microsoft/graphcodebert-base`.
-- 5-fold stratified cross-validation repeated across 5 seeds (25
-  fold-runs per backbone, 75 fold-runs total).
-- Class-imbalance handling via minority oversampling and
-  inverse-frequency weighted cross-entropy with label smoothing.
-- Disk-safe training (custom `ManualEarlyStoppingCallback` removes the
-  need for HuggingFace checkpoint files).
-- Reproducible artifacts: PNG figures in `figures/`, CSV / JSON tables
-  in `tables/` and `results/`.
-- A standalone Jupyter notebook
-  (`notebooks/quantum-vs-classical-bug-prediction-v11.ipynb`) that
-  reproduces every result end-to-end.
+- `roberta-base`
+- `microsoft/codebert-base`
+- `microsoft/graphcodebert-base`
 
-## Tech Stack
+The comparison holds architecture and parameter count constant, so the main experimental variable is the model's pre-training corpus rather than model size or architecture.
 
-| Concern              | Library / tool                                     |
-|----------------------|----------------------------------------------------|
-| Deep learning        | PyTorch, HuggingFace `transformers`, `datasets`, `accelerate` |
-| Splits / metrics     | scikit-learn                                       |
-| Statistical testing  | SciPy (`ttest_rel`)                                |
-| Tabular processing   | pandas, numpy                                      |
-| Figures              | matplotlib, seaborn                                |
-| Notebook environment | Jupyter                                            |
-| Testing              | pytest                                             |
+## Key Features / Capabilities
 
-## Model Backbones
+- Classifies Qiskit bug reports as either **classical** or **quantum-specific**.
+- Compares three pre-trained encoder backbones: RoBERTa, CodeBERT, and GraphCodeBERT.
+- Uses stratified 5-fold cross-validation repeated across 5 random seeds.
+- Produces 25 fold-runs per model and 75 total fold-runs.
+- Handles class imbalance using minority oversampling and class-weighted cross-entropy.
+- Uses label smoothing and macro-F1 early stopping for more stable training.
+- Avoids excessive checkpoint storage with a custom disk-safe early-stopping callback.
+- Computes accuracy, macro-F1, ROC-AUC, confusion matrices, and statistical tests.
+- Generates reproducible tables and figures for the final report.
+- Provides an end-to-end Jupyter notebook for reproducing the full experiment.
 
-| Short           | HF identifier                  | Pretraining domain                | Role                  |
-|-----------------|--------------------------------|-----------------------------------|-----------------------|
-| `roberta`       | `roberta-base`                 | English text only                 | Control               |
-| `codebert`      | `microsoft/codebert-base`      | Code + NL bimodal                 | Code-aware encoder    |
-| `graphcodebert` | `microsoft/graphcodebert-base` | Code + NL + data-flow graphs      | Structure-aware       |
+## Tech Stack and Architecture (High-Level)
 
-## Dataset
+### Tech Stack
 
-- 233 labeled bug-pattern records (134 classical, 99 quantum) derived
-  from Bugs-QCP and related quantum bug benchmark resources.
-- Class imbalance ratio ~1.35 : 1.
-- Each record is converted into a single training string via
-  `name + "\n" + description + "\n" + example_code` (empty fields
-  skipped). See `src/data_utils.py::build_input_text`.
-- `data/bug_patterns_labeled.json` ships the full catalog;
-  `data/sample_data.json` is a tiny excerpt for quick smoke tests.
+| Component | Tools / Libraries |
+|---|---|
+| Deep learning | PyTorch |
+| Transformer models | HuggingFace Transformers |
+| Dataset handling | HuggingFace Datasets, pandas, NumPy |
+| Metrics and cross-validation | scikit-learn |
+| Statistical testing | SciPy |
+| Visualization | Matplotlib, Seaborn |
+| Notebook environment | Jupyter / Kaggle |
+| Testing | pytest |
+
+### Model Backbones
+
+| Short Name | HuggingFace Identifier | Pre-training Domain | Role |
+|---|---|---|---|
+| RoBERTa | `roberta-base` | Natural language | Control model |
+| CodeBERT | `microsoft/codebert-base` | Code + natural language | Code-aware encoder |
+| GraphCodeBERT | `microsoft/graphcodebert-base` | Code + natural language + data-flow information | Structure-aware encoder |
+
+### High-Level Architecture
+
+The project follows a supervised fine-tuning and evaluation pipeline:
+
+1. Bug-pattern records are loaded from the `data/` folder.
+2. Each record is converted into a canonical text input using fields such as bug name, description, and example code.
+3. The input text is tokenized using the selected HuggingFace tokenizer.
+4. A transformer encoder is fine-tuned for binary classification.
+5. Minority oversampling and class-weighted loss are applied to reduce class imbalance.
+6. The model is evaluated using repeated stratified cross-validation.
+7. Metrics, predictions, tables, and figures are saved to `results/`, `tables/`, and `figures/`.
+
+The main components are:
+
+- `data/` - input bug-pattern data
+- `src/data_utils.py` - data loading and input construction
+- `src/model_utils.py` - model and tokenizer loading
+- `src/train_utils.py` - training helpers, oversampling, weighted loss, and early stopping
+- `src/evaluate.py` - metric computation
+- `src/plotting.py` - figure generation
+- `notebooks/` - full end-to-end experimental notebook
+- `scripts/` - standalone scripts for training, evaluation, and figure generation
+
+## Setup Instructions
+
+### Prerequisites
+
+The project assumes the following:
+
+- Python 3.10 or 3.11
+- pip or conda
+- Git
+- Jupyter Notebook
+- An NVIDIA GPU is recommended for full training
+
+The final experiments were run in a GPU environment. CPU execution is possible for lightweight tests, but full cross-validation training may take several hours.
+
+### Clone the Repository
+
+```bash
+git clone https://github.com/mrahm65/CSC-7644_Fine-Tuning-LLMs-for-Bug-Detection-in-Quantum-Software.git
+cd CSC-7644_Fine-Tuning-LLMs-for-Bug-Detection-in-Quantum-Software
+```
+
+### Create a Virtual Environment
+
+On macOS/Linux:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+```
+
+On Windows:
+
+```bash
+python -m venv .venv
+.venv\Scripts\activate
+```
+
+### Install Dependencies
+
+```bash
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+For a CUDA-enabled PyTorch installation, follow the official PyTorch installation command for your system:
+
+```bash
+pip install torch --index-url https://download.pytorch.org/whl/cu121
+pip install -r requirements.txt
+```
+
+### Configure Environment Variables
+
+Copy the example environment file:
+
+```bash
+cp .env.example .env
+```
+
+The shipped pipeline does **not** require API keys. Optional environment variables are included only for future extensions.
+
+| Variable            | Purpose                                                                      |
+| ------------------- | ---------------------------------------------------------------------------- |
+| `OPENAI_API_KEY`    | Optional; only needed for downstream LLM-as-judge or prompt-based extensions |
+| `HUGGINGFACE_TOKEN` | Optional; only needed for gated HuggingFace models                           |
+
+The `.gitignore` file excludes `.env`, so real secrets should remain local and should not be committed.
+
+## Running the Application
+
+### Option 1: Run the Full Notebook
+
+The main end-to-end implementation is in:
+
+```text
+notebooks/quantum-vs-classical-bug-prediction-v11.ipynb
+```
+
+Start Jupyter with:
+
+```bash
+jupyter notebook notebooks/quantum-vs-classical-bug-prediction-v11.ipynb
+```
+
+The notebook performs:
+
+1. Environment setup
+2. Data loading
+3. Input preprocessing
+4. Model/tokenizer loading
+5. Training
+6. Cross-validation
+7. Evaluation
+8. Statistical testing
+9. Figure generation
+10. Final result reporting
+
+### Option 2: Run Scripts
+
+Run full training:
+
+```bash
+python scripts/run_training.py
+```
+
+Inspect saved evaluation metrics:
+
+```bash
+python scripts/run_evaluation.py --tables-dir tables
+```
+
+Regenerate report figures:
+
+```bash
+python scripts/generate_figures.py
+```
+
+### Run Tests
+
+```bash
+TMPDIR=/tmp pytest tests/ -q
+```
+
+The lightweight tests check data-loading and metric-computation utilities without requiring full model training.
 
 ## Repository Organization
+
+The repository is organized so a grader can quickly locate the implementation, data, documentation, results, and evaluation artifacts.
 
 ```text
 CSC-7644_Fine-Tuning-LLMs-for-Bug-Detection-in-Quantum-Software/
@@ -86,164 +224,64 @@ CSC-7644_Fine-Tuning-LLMs-for-Bug-Detection-in-Quantum-Software/
 `-- results/
 ```
 
-| Folder       | Contents                                                                          |
-|--------------|-----------------------------------------------------------------------------------|
-| `data/`      | `bug_patterns_labeled.json`, `sample_data.json`, `README.md`.                     |
-| `docs/`      | Final report (PDF + LaTeX), `project_summary.md`, `methodology.md`, `architecture.md`. |
-| `figures/`   | The five canonical PNG figures plus per-backbone SVG companions.                  |
-| `notebooks/` | `quantum-vs-classical-bug-prediction-v11.ipynb` (full end-to-end pipeline).       |
-| `scripts/`   | `run_training.py`, `run_evaluation.py`, `generate_figures.py`.                    |
-| `src/`       | `data_utils.py`, `model_utils.py`, `train_utils.py`, `evaluate.py`, `plotting.py`. |
-| `tables/`    | `summary_metrics.csv`, `statistical_tests.csv`, `model_comparison.csv` + per-fold/per-model files. |
-| `results/`   | `predictions_<short>.csv`, `fold_metrics.csv`, `final_summary.json`.              |
-| `tests/`     | Pytest suite (`test_data_utils.py`, `test_evaluate.py`, ...).                     |
+### Root Files
 
-## Setup Instructions
+| File               | Description                                                                             |
+| ------------------ | --------------------------------------------------------------------------------------- |
+| `README.md`        | Main project documentation, setup instructions, usage guide, results, and citations     |
+| `requirements.txt` | Python dependencies required to run the project                                         |
+| `.gitignore`       | Prevents local environments, cache files, checkpoints, and secrets from being committed |
+| `.env.example`     | Template for optional environment variables                                             |
+| `LICENSE`          | Repository license                                                                      |
+| `main.py`          | Lightweight entry point that prints basic project usage information                     |
+| `pyproject.toml`   | Project metadata and optional formatting/testing configuration                          |
 
-### Prerequisites
+### Main Directories
 
-- Python 3.10 or 3.11.
-- pip (or conda) for installing dependencies.
-- An NVIDIA GPU is strongly recommended for training. CPU runs work but
-  a full 75-fold sweep takes hours.
+| Directory    | Description                                                                                          |
+| ------------ | ---------------------------------------------------------------------------------------------------- |
+| `data/`      | Bug-pattern dataset files and sample data for demonstration                                          |
+| `docs/`      | Final report, LaTeX source, project summary, methodology notes, and architecture notes               |
+| `figures/`   | Report-ready figures such as dataset distribution, workflow diagram, confusion matrix, and ROC curve |
+| `notebooks/` | Main Jupyter notebook containing the full end-to-end experimental pipeline                           |
+| `scripts/`   | Standalone scripts for training, evaluation, and figure generation                                   |
+| `src/`       | Reusable Python modules for data loading, model utilities, training, evaluation, and plotting        |
+| `tables/`    | CSV tables containing summary metrics, statistical tests, and model comparisons                      |
+| `results/`   | Prediction files, fold-level metrics, and final summary outputs                                      |
+| `tests/`     | Lightweight pytest tests for core utility functions                                                  |
 
-### Install dependencies
+### Important Source Files
 
-```bash
-python -m venv .venv
-source .venv/bin/activate          # Windows: .venv\Scripts\activate
-pip install --upgrade pip
-pip install -r requirements.txt
-```
-
-For a CUDA build of PyTorch pick the matching command from
-<https://pytorch.org/get-started/locally/> *before* running the line
-above. Example for CUDA 12.1:
-
-```bash
-pip install torch --index-url https://download.pytorch.org/whl/cu121
-pip install -r requirements.txt
-```
-
-### Configure environment variables
-
-```bash
-cp .env.example .env
-```
-
-Then fill in `.env` if you need API tokens for downstream tooling.
-The pipeline as shipped does **not** require any API keys.
-
-| Variable             | Purpose                                                                    |
-|----------------------|----------------------------------------------------------------------------|
-| `OPENAI_API_KEY`     | Optional - only needed for downstream LLM-as-judge tooling.                |
-| `HUGGINGFACE_TOKEN`  | Optional - only needed for gated models (none used here).                  |
-
-`.gitignore` already excludes `.env`, so secrets stay local.
-
-## Running the Project
-
-### Notebook (full end-to-end pipeline)
-
-```bash
-jupyter notebook notebooks/quantum-vs-classical-bug-prediction-v11.ipynb
-```
-
-The notebook contains every step from environment setup to figure
-generation.
-
-### Scripts
-
-```bash
-# Full reproducible training (GPU recommended; ~75-110 min on a T4)
-python scripts/run_training.py
-
-# Inspect saved metrics without rerunning training
-python scripts/run_evaluation.py --tables-dir tables
-
-# Regenerate the report-ready PNG figures
-python scripts/generate_figures.py
-```
-
-### Tests
-
-```bash
-TMPDIR=/tmp pytest tests/ -q
-```
-
-The lightweight tests (`test_data_utils.py`, `test_evaluate.py`,
-`test_schemas.py`, `test_dataset.py`) run without torch / transformers.
-
-## Results
-
-| Model         | Accuracy        | Macro-F1        | ROC-AUC         | Pooled Acc | Pooled F1 |
-|---------------|-----------------|-----------------|-----------------|-----------:|----------:|
-| RoBERTa       | 0.764 +/- 0.061 | 0.754 +/- 0.066 | 0.858 +/- 0.048 |      0.764 |     0.756 |
-| CodeBERT      | 0.767 +/- 0.057 | 0.763 +/- 0.056 | 0.855 +/- 0.044 |      0.767 |     0.764 |
-| GraphCodeBERT | 0.758 +/- 0.058 | 0.756 +/- 0.058 | 0.860 +/- 0.047 |      0.758 |     0.757 |
-
-Paired Welch's *t*-tests across the 25 matched folds find **no
-statistically significant difference** between any pair of backbones on
-accuracy, macro-F1, or ROC-AUC (every *p* > 0.3). On 233 labeled
-samples, code-aware (CodeBERT) and structure-aware (GraphCodeBERT)
-pretraining do not yield a measurable advantage over English-only
-RoBERTa for this binary task.
-
-The full per-pair test results are in
-[`tables/statistical_tests.csv`](tables/statistical_tests.csv); the
-canonical figures are in [`figures/`](figures/).
-
-## Scope Changes from Midterm Proposal
-
-The midterm proposal scoped a fine-tuning + RAG comparison. After
-exploration we narrowed the deliverable to a controlled three-backbone
-fine-tuning study because:
-
-1. The labeled dataset is small (233 records); a controlled architecture-
-   matched comparison gives sharper conclusions than chasing additional
-   tooling.
-2. Holding architecture and parameter count constant (all three are
-   125M-parameter RoBERTa encoders) isolates the *pretraining-data*
-   variable, which directly answers the question the proposal raised
-   about quantum-specific signal.
-3. The final write-up still covers retrieval-augmented generation as
-   future work in the discussion section.
-
-## Reproducibility
-
-- Pinned dependency versions in `requirements.txt` and `pyproject.toml`.
-- All seeds (CV split, `transformers.set_seed`, oversampling RNG) are
-  derived from the per-fold seed, so `python scripts/run_training.py`
-  produces bit-identical metrics on the same hardware.
-- `save_strategy="no"` avoids writing fold checkpoints; per-fold
-  scratch directories under `results/` are deleted at the end of each
-  fold so disk usage stays bounded.
-- Tests in `tests/` exercise the data-loading and metric paths that are
-  hardest to verify by eye.
+| File                          | Purpose                                                                               |
+| ----------------------------- | ------------------------------------------------------------------------------------- |
+| `src/data_utils.py`           | Loads bug-pattern data and builds canonical text inputs                               |
+| `src/model_utils.py`          | Loads HuggingFace tokenizers and sequence-classification models                       |
+| `src/train_utils.py`          | Implements training helpers, class weighting, oversampling, and manual early stopping |
+| `src/evaluate.py`             | Computes accuracy, macro-F1, ROC-AUC, and related evaluation metrics                  |
+| `src/plotting.py`             | Generates figures used in the final report                                            |
+| `scripts/run_training.py`     | Runs the full training and cross-validation pipeline                                  |
+| `scripts/run_evaluation.py`   | Loads saved outputs and computes/prints final evaluation summaries                    |
+| `scripts/generate_figures.py` | Regenerates report-ready figures from saved tables/results                            |
 
 ## Attributions and Citations
 
-- HuggingFace Transformers documentation: <https://huggingface.co/docs/transformers>.
-- Liu et al., *RoBERTa: A Robustly Optimized BERT Pretraining Approach*
-  (arXiv:1907.11692, 2019).
-- Feng et al., *CodeBERT: A Pre-Trained Model for Programming and
-  Natural Languages* (EMNLP 2020).
-- Guo et al., *GraphCodeBERT: Pre-training Code Representations with
-  Data Flow* (ICLR 2021).
-- scikit-learn (<https://scikit-learn.org/>) for cross-validation, paired
-  *t*-tests, and metric definitions.
-- Bugs-QCP and the broader Qiskit bug-pattern community for the source
-  data; see `data/README.md` for redistribution constraints.
+This project uses the following external tools, models, and research resources:
 
-No external code was copied verbatim. The `ManualEarlyStoppingCallback`
-in `src/train_utils.py` is a stripped-down rewrite of
-`transformers.EarlyStoppingCallback` adapted to work with
-`save_strategy='no'`.
+- HuggingFace Transformers: <https://huggingface.co/docs/transformers>
+- PyTorch: <https://pytorch.org/>
+- scikit-learn: <https://scikit-learn.org/>
+- RoBERTa: Liu et al., *RoBERTa: A Robustly Optimized BERT Pretraining Approach*, 2019.
+- CodeBERT: Feng et al., *CodeBERT: A Pre-Trained Model for Programming and Natural Languages*, EMNLP 2020.
+- GraphCodeBERT: Guo et al., *GraphCodeBERT: Pre-training Code Representations with Data Flow*, ICLR 2021.
+- Bugs4Q: Zhao et al., *Bugs4Q: A Benchmark of Real Bugs for Quantum Programs*, ASE 2021.
+- QBugs / Bugs-QCP-related resources: Campos and Souto, *QBugs: A Collection of Reproducible Bugs in Quantum Algorithms*, 2021.
+
+No external code was copied verbatim. The custom `ManualEarlyStoppingCallback` in `src/train_utils.py` was implemented as a simplified, disk-safe adaptation inspired by HuggingFace's early-stopping behavior. This was necessary because standard checkpoint-based early stopping exceeded the available disk quota during repeated cross-validation.
 
 ## Author
 
 **Md Saidur Rahman**
-- Email (course): `mrahm65@lsu.edu`
-- Email (alt):    `saidur@eub.edu.bd`
-- Course:         CSC 7644 - Applied LLM Development, Spring 2026
-- Institution:    Louisiana State University
+Department of Computer Science
+Louisiana State University
+CSC 7644: Applied LLM Development
+Email: `mrahm65@lsu.edu`
