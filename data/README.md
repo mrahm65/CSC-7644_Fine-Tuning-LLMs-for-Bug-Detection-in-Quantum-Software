@@ -1,20 +1,17 @@
-# Notebooks
+# Data
 
-This folder contains the final end-to-end Jupyter notebook for the project.
+This folder contains the dataset files used for the quantum-vs-classical bug classification project.
 
-| Notebook | Description |
+| File | Description |
 |---|---|
-| `quantum-vs-classical-bug-prediction-final.ipynb` | Final notebook used to reproduce the reported training, evaluation, tables, and figures. |
+| `bug_patterns.json` | Original/main bug-pattern dataset. |
+| `bug_patterns_labeled.json` | Main labeled dataset used by the training notebook and scripts. |
+| `bug_patterns_categorized.json` | Full categorized dataset with the `bug_category` field. |
+| `bug_patterns_quantum.json` | Quantum-only subset containing 99 quantum-specific bug records. |
+| `bug_patterns_classical.json` | Classical-only subset containing 134 classical bug records. |
+| `sample_data.json` | Small sample dataset for quick testing and demonstration. |
 
-The notebook includes:
+The final task is binary classification:
 
-1. Environment setup
-2. Data loading
-3. Input preprocessing
-4. Model and tokenizer loading
-5. Fine-tuning
-6. 5-fold cross-validation across five seeds
-7. Evaluation metrics
-8. Statistical testing
-9. Figure generation
-10. Final result summary
+- `quantum`
+- `classical`
