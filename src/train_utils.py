@@ -20,6 +20,8 @@ def compute_class_weights(
     weight of 1 to avoid division by zero.
     """
     counts = Counter(labels)
+    # Default unseen-class frequency to 1 so the weight expression below
+    # never divides by zero. Each class gets at least token weight.
     freqs = np.array(
         [counts.get(i, 1) for i in range(num_labels)], dtype=np.float32
     )
@@ -48,12 +50,15 @@ def oversample_minority_class(
     for label, group in by_label.items():
         full_repeats = target // len(group)
         remainder = target - full_repeats * len(group)
+        # Tile the existing group as many full copies as fit, then sample
+        # without replacement to top up the remainder.
         expanded = group * full_repeats
         if remainder:
             expanded += rng.sample(group, remainder)
         out_texts.extend(expanded)
         out_labels.extend([label] * len(expanded))
 
+    # Shuffle paired indices so batches do not become class-blocked.
     indices = list(range(len(out_texts)))
     rng.shuffle(indices)
     return [out_texts[i] for i in indices], [out_labels[i] for i in indices]
@@ -73,16 +78,25 @@ def make_manual_early_stopping_callback(patience: int = 4):
         """Patience-based early stopping on macro-F1."""
 
         def __init__(self, patience: int) -> None:
+            """Store ``patience`` and initialize the best-score tracker."""
             self.patience = patience
+            # Initial best is below the lowest possible macro-F1 (0.0) so
+            # the first evaluation always counts as an improvement.
             self.best_f1 = -1.0
             self.wait = 0
 
         def on_train_begin(self, args, state, control, **kwargs):
+            """Reset the best-score tracker at the start of every fold."""
             self.best_f1 = -1.0
             self.wait = 0
 
         def on_evaluate(self, args, state, control, metrics=None, **kwargs):
-            current_f1 = metrics.get("eval_f1_macro", 0.0) if metrics else 0.0
+            """Update the wait counter and stop training when patience is exceeded."""
+            current_f1 = (
+                metrics.get("eval_f1_macro", 0.0) if metrics else 0.0
+            )
+            # Tiny epsilon prevents oscillating-equal cases from resetting
+            # the wait counter spuriously.
             if current_f1 > self.best_f1 + 1e-4:
                 self.best_f1 = current_f1
                 self.wait = 0
@@ -102,16 +116,24 @@ def make_epoch_log_callback(log_store: List[Dict]):
         """Append per-evaluation metrics to ``log_store``."""
 
         def __init__(self, store: List[Dict]) -> None:
+            """Hold a reference to the caller-owned log list."""
             self.log_store = store
 
         def on_evaluate(self, args, state, control, metrics=None, **kwargs):
+            """Snapshot loss / accuracy / macro-F1 at the end of each eval."""
             if metrics:
+                # ``state.epoch`` is the fractional epoch the trainer just
+                # finished; storing it keeps learning-curve plots aligned.
                 self.log_store.append(
                     {
                         "epoch": state.epoch,
                         "eval_loss": metrics.get("eval_loss", float("nan")),
-                        "eval_acc": metrics.get("eval_accuracy", float("nan")),
-                        "eval_f1": metrics.get("eval_f1_macro", float("nan")),
+                        "eval_acc": metrics.get(
+                            "eval_accuracy", float("nan")
+                        ),
+                        "eval_f1": metrics.get(
+                            "eval_f1_macro", float("nan")
+                        ),
                     }
                 )
 
@@ -130,14 +152,24 @@ def make_weighted_trainer_class():
         _label_smoothing: float = 0.0
 
         def set_class_weights(self, weights: torch.Tensor) -> None:
+            """Move the inverse-frequency weight tensor to the trainer device."""
+            # The weight tensor must live on the same device as the model
+            # so torch's CrossEntropyLoss can apply it without a copy.
             self._class_weights = weights.to(self.args.device)
 
         def set_label_smoothing(self, smoothing: float) -> None:
+            """Configure the label-smoothing factor used in compute_loss()."""
             self._label_smoothing = float(smoothing)
 
         def compute_loss(
             self, model, inputs, return_outputs=False, **kwargs
         ):
+            """Cross-entropy loss with optional class weights + smoothing.
+
+            Pops ``labels`` from ``inputs`` (Trainer convention), runs the
+            model, then applies ``torch.nn.CrossEntropyLoss`` with the
+            stored class-weight tensor and label-smoothing factor.
+            """
             labels = inputs.pop("labels")
             outputs = model(**inputs)
             loss_fct = torch.nn.CrossEntropyLoss(

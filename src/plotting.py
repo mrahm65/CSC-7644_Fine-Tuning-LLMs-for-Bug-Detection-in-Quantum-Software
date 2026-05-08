@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import os
-from typing import Any, Dict, List, Optional, Sequence
+from typing import Any, Dict, Optional, Sequence
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -47,6 +47,8 @@ def apply_plot_style() -> None:
 
 def _save(fig, output_path: str) -> str:
     """Resolve ``output_path``, save, close. Returns the absolute path."""
+    # Make sure the destination directory exists; matplotlib does not
+    # create missing parent folders automatically.
     os.makedirs(os.path.dirname(os.path.abspath(output_path)), exist_ok=True)
     fig.savefig(output_path, bbox_inches="tight")
     plt.close(fig)
@@ -63,22 +65,35 @@ def plot_confusion_matrix(
     """Generate and save a confusion matrix figure."""
     apply_plot_style()
     cm = confusion_matrix(y_true, y_pred, labels=[0, 1])
+    # Row-normalize so the percentages reflect class-conditional recall.
     cm_pct = cm.astype(float) / cm.sum(axis=1, keepdims=True) * 100
 
     fig, ax = plt.subplots(figsize=(6, 5))
     sns.heatmap(
-        cm, annot=False, cmap="Blues",
-        xticklabels=LABEL_LIST, yticklabels=LABEL_LIST,
+        cm,
+        annot=False,
+        cmap="Blues",
+        xticklabels=LABEL_LIST,
+        yticklabels=LABEL_LIST,
         cbar_kws={"label": "Prediction count"},
-        linewidths=0.5, linecolor="white", ax=ax,
+        linewidths=0.5,
+        linecolor="white",
+        ax=ax,
     )
     for i in range(cm.shape[0]):
         for j in range(cm.shape[1]):
+            # Pick text color based on cell intensity so labels stay legible
+            # against both light and dark heatmap cells.
             color = "white" if cm[i, j] > cm.max() * 0.5 else "black"
-            ax.text(j + 0.5, i + 0.40, f"{cm[i, j]}", ha="center",
-                    va="center", fontsize=18, fontweight="bold", color=color)
-            ax.text(j + 0.5, i + 0.62, f"({cm_pct[i, j]:.1f}%)",
-                    ha="center", va="center", fontsize=11, color=color)
+            ax.text(
+                j + 0.5, i + 0.40, f"{cm[i, j]}",
+                ha="center", va="center", fontsize=18,
+                fontweight="bold", color=color,
+            )
+            ax.text(
+                j + 0.5, i + 0.62, f"({cm_pct[i, j]:.1f}%)",
+                ha="center", va="center", fontsize=11, color=color,
+            )
     ax.set_xlabel("Predicted label", labelpad=8)
     ax.set_ylabel("True label", labelpad=8)
     ax.set_title(title or "Confusion matrix (pooled across CV folds)",
@@ -108,7 +123,9 @@ def plot_roc_curve(
     ax.set_xlabel("False positive rate")
     ax.set_ylabel("True positive rate")
     ax.set_title(title or "ROC curve", fontsize=12)
-    ax.set_xlim(-0.02, 1.02); ax.set_ylim(-0.02, 1.05)
+    # Tiny padding around [0, 1] so the curves don't touch the axis spine.
+    ax.set_xlim(-0.02, 1.02)
+    ax.set_ylim(-0.02, 1.05)
     ax.legend(fontsize=11, loc="lower right")
     ax.set_aspect("equal")
     plt.tight_layout()
@@ -127,6 +144,8 @@ def plot_roc_overlay(
         probs = np.array(summary["probs_all"])
         fpr, tpr, _ = roc_curve(y_true, probs[:, 1])
         auc = roc_auc_score(y_true, probs[:, 1])
+        # Use a stable per-backbone color so cross-figure comparisons
+        # remain visually consistent.
         color = OVERLAY_COLORS.get(summary["model_short"], "#34495e")
         ax.plot(fpr, tpr, linewidth=2.2, color=color,
                 label=f'{summary["model_short"]}  (AUC = {auc:.3f})')
@@ -135,7 +154,9 @@ def plot_roc_overlay(
     ax.set_xlabel("False positive rate")
     ax.set_ylabel("True positive rate")
     ax.set_title("ROC curves - three-backbone comparison", fontsize=12)
-    ax.set_xlim(-0.02, 1.02); ax.set_ylim(-0.02, 1.05)
+    # Tiny padding around [0, 1] so the curves don't touch the axis spine.
+    ax.set_xlim(-0.02, 1.02)
+    ax.set_ylim(-0.02, 1.05)
     ax.legend(fontsize=11, loc="lower right")
     ax.set_aspect("equal")
     plt.tight_layout()
@@ -161,6 +182,7 @@ def plot_mean_metrics_bar(
         stds = [s[skey] for s in summaries]
         bars = ax.bar(xpos, means, yerr=stds, capsize=6, color=color,
                       alpha=0.80, edgecolor="black", linewidth=0.8)
+        # Random-classifier reference line for binary classification.
         ax.axhline(0.5, color="gray", linestyle=":", linewidth=1.5,
                    label="Random (50%)")
         ax.set_xticks(xpos)
@@ -193,6 +215,8 @@ def plot_dataset_distribution(
     fig, ax = plt.subplots(figsize=(7, 5))
     keys = list(counts.keys())
     vals = list(counts.values())
+    # Map each class to its house-style color; unknown labels fall back
+    # to a neutral slate.
     colors = [PALETTE.get(k, "#34495e") for k in keys]
     bars = ax.bar(keys, vals, color=colors, alpha=0.85,
                   edgecolor="black", linewidth=0.8)
@@ -200,7 +224,8 @@ def plot_dataset_distribution(
     for bar, v in zip(bars, vals):
         pct = 100 * v / max(total, 1)
         ax.text(bar.get_x() + bar.get_width() / 2, v + max(vals) * 0.01,
-                f"{v}\n({pct:.1f}%)", ha="center", fontsize=12, fontweight="bold")
+                f"{v}\n({pct:.1f}%)", ha="center",
+                fontsize=12, fontweight="bold")
     ax.set_ylabel("Number of records")
     ax.set_title(title or f"Dataset class distribution (N = {total})",
                  fontweight="bold")
@@ -215,13 +240,17 @@ def plot_methodology_diagram(output_path: str) -> str:
     fig, ax = plt.subplots(figsize=(13, 5))
     ax.axis("off")
 
+    # Each tuple is (label, x-center, y-center, fill-color).
     boxes = [
-        ("Bug-pattern\nJSON dataset",      0.05, 0.40, "#bdc3c7"),
+        ("Bug-pattern\nJSON dataset", 0.05, 0.40, "#bdc3c7"),
         ("Text builder\n(name + desc + code)", 0.22, 0.40, "#f1c40f"),
-        ("Tokenizer +\nEncoder backbone\n(RoBERTa / CodeBERT /\nGraphCodeBERT)",
-                                              0.42, 0.40, "#3498db"),
-        ("Classification head\n+ Weighted CE\n+ Label smoothing", 0.66, 0.40, "#9b59b6"),
-        ("5x5 CV evaluation\n(Accuracy, Macro-F1,\nROC-AUC)",      0.85, 0.40, "#27ae60"),
+        ("Tokenizer +\nEncoder backbone\n"
+         "(RoBERTa / CodeBERT /\nGraphCodeBERT)",
+         0.42, 0.40, "#3498db"),
+        ("Classification head\n+ Weighted CE\n+ Label smoothing",
+         0.66, 0.40, "#9b59b6"),
+        ("5x5 CV evaluation\n(Accuracy, Macro-F1,\nROC-AUC)",
+         0.85, 0.40, "#27ae60"),
     ]
     for text, x, y, c in boxes:
         ax.add_patch(plt.Rectangle(
@@ -232,6 +261,8 @@ def plot_methodology_diagram(output_path: str) -> str:
                 fontweight="bold")
 
     arrow_y = 0.40
+    # Connector arrows between adjacent boxes; coordinates were tuned by
+    # eye to land just outside each box so they read as separate steps.
     for x_start, x_end in [(0.13, 0.15), (0.30, 0.35), (0.50, 0.59),
                            (0.74, 0.78)]:
         ax.annotate(
@@ -247,6 +278,8 @@ def plot_methodology_diagram(output_path: str) -> str:
             "5-fold stratified CV x 5 seeds = 25 fold-runs per backbone "
             "(75 fold-runs total)",
             ha="center", fontsize=11, style="italic", color="#555")
-    ax.set_xlim(0, 1); ax.set_ylim(0, 1)
+    # Diagram canvas is in normalized [0, 1] coordinates.
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 1)
     plt.tight_layout()
     return _save(fig, output_path)
