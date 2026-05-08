@@ -1,25 +1,20 @@
-# Data
+# Notebooks
 
-This folder contains data resources for the quantum-vs-classical bug
-classification project.
+This folder contains the final end-to-end Jupyter notebook for the project.
 
-The project uses Qiskit-centric bug report data derived from Bugs-QCP and
-related quantum bug benchmark resources.
+| Notebook | Description |
+|---|---|
+| `quantum-vs-classical-bug-prediction-final.ipynb` | Final notebook used to reproduce the reported training, evaluation, tables, and figures. |
 
-The task is binary classification:
+The notebook includes:
 
-- classical bug
-- quantum-specific bug
-
-Each sample is converted into a canonical input string using available
-fields such as bug name, description, and example code.
-
-If the full dataset cannot be redistributed, this folder should contain
-sample data and instructions for obtaining the original dataset.
-
-## Files
-
-| File                          | Description                                                                |
-|-------------------------------|----------------------------------------------------------------------------|
-| `bug_patterns_labeled.json`   | Full bug-pattern catalog (233 records) used by every script and notebook.  |
-| `sample_data.json`            | A trimmed, anonymous example so the loader can be exercised quickly.       |
+1. Environment setup
+2. Data loading
+3. Input preprocessing
+4. Model and tokenizer loading
+5. Fine-tuning
+6. 5-fold cross-validation across five seeds
+7. Evaluation metrics
+8. Statistical testing
+9. Figure generation
+10. Final result summary
