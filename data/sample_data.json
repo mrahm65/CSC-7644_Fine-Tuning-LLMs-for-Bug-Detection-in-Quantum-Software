@@ -1,0 +1,85 @@
+[
+  {
+    "pattern_id": "BP001",
+    "name": "CNOT Self-Loop",
+    "taxonomy_class": "incorrect_qubit_mapping",
+    "description": "A CNOT (CX) gate is applied with the same qubit index as both control and target. Qiskit raises an error or silently produces an incorrect circuit depending on the backend.",
+    "example_code": "qc.cx(0, 0)  # control == target \u2014 always wrong",
+    "tags": [
+      "cx",
+      "cnot",
+      "qubit_mapping"
+    ],
+    "bug_category": null
+  },
+  {
+    "pattern_id": "BP002",
+    "name": "Missing Measurement Before Classical Read",
+    "taxonomy_class": "measurement_error",
+    "description": "A classical register is read or conditioned upon without a preceding measurement gate, leaving the register in its initialised (all-zero) state and producing incorrect conditional logic.",
+    "example_code": "qc.x(0).c_if(cr, 1)  # cr was never populated by a measure call",
+    "tags": [
+      "measurement",
+      "classical",
+      "c_if"
+    ],
+    "bug_category": null
+  },
+  {
+    "pattern_id": "BP003",
+    "name": "Incorrect Rotation Angle (Off-by-Pi)",
+    "taxonomy_class": "incorrect_operator",
+    "description": "A rotation gate such as RX, RY, or RZ is given an angle that is off by a factor of pi or 2*pi, resulting in the wrong quantum state. This often occurs when mixing degree and radian conventions.",
+    "example_code": "qc.ry(90, 0)  # likely intended math.pi/2 \u2248 1.5708, not 90 radians",
+    "tags": [
+      "rotation",
+      "angle",
+      "ry",
+      "rx",
+      "rz"
+    ],
+    "bug_category": null
+  },
+  {
+    "pattern_id": "BP004",
+    "name": "Barrier Omission Before Measurement",
+    "taxonomy_class": "missing_barrier",
+    "description": "Omitting a barrier before measurement allows circuit optimisers to reorder or cancel gates that should precede the measurement, silently changing the measured distribution.",
+    "example_code": "qc.h(0)\nqc.measure(0, 0)  # no barrier; optimiser may remove h",
+    "tags": [
+      "barrier",
+      "measurement",
+      "optimisation"
+    ],
+    "bug_category": null
+  },
+  {
+    "pattern_id": "BP005",
+    "name": "Initialisation to Wrong Basis State",
+    "taxonomy_class": "wrong_initial_state",
+    "description": "The circuit is initialised using initialize() or reset() with an incorrect state vector, producing a starting superposition that does not match the intended algorithm.",
+    "example_code": "qc.initialize([1, 0, 0, 0], [0, 1])  # two-qubit state but single list index",
+    "tags": [
+      "initialize",
+      "state_vector",
+      "initial_state"
+    ],
+    "bug_category": null
+  },
+  {
+    "pattern_id": "BQCP_1",
+    "name": "Missing Error Handling",
+    "taxonomy_class": "error_handling",
+    "description": "From fixer: \"Currently, cvx_fit does not check the success of the prob.solve() call. When the solver fails, this results in a crash on the following line: rho_fit = rho_r.value + 1j * rho_i.value\"",
+    "example_code": "",
+    "tags": [
+      "bug_type:classical",
+      "bugsqcp",
+      "component:quantum state evaluation",
+      "origin_file:MattePalte-Bugs-Quantum-Computing-Platforms-0c1c805_artifacts_annotation_bugs_cs",
+      "project:qiskit-ignis",
+      "error_handling"
+    ],
+    "bug_category": null
+  }
+]

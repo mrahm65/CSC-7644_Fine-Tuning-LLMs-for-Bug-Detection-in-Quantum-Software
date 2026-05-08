@@ -1,54 +1,39 @@
-# Sample YAML configuration matching src.config.TrainingConfig.
-#
-# Note: the pipeline currently reads its config from environment variables
-# and CLI flags rather than a YAML file. This example is provided so
-# graders and contributors can see every tunable knob in one place. Pass
-# any of the I/O paths via the matching env variable (DATA_PATH,
-# OUTPUT_DIR, FIGURES_DIR, TABLES_DIR, FIGURE_FORMAT) before running
-# `python main.py`.
+# Example configuration for Study I (classical vs. quantum bug classification).
+# Copy to config.yaml and edit; values here mirror src/study_i/schemas.TrainingConfig.
 
-# --- I/O paths --------------------------------------------------------------
+# I/O paths (env vars DATA_PATH / OUTPUT_DIR / FIGURES_DIR / TABLES_DIR
+# take precedence; CLI flags override env vars).
 data_path:    data/bug_patterns_labeled.json
 output_dir:   results        # Trainer scratch (per-fold temp dirs).
-figures_dir:  figures        # PNG / SVG figures.
-tables_dir:   tables         # CSV / JSON tables.
-figure_format: svg           # One of: svg, png, pdf.
+figures_dir:  figures        # SVG/PNG figures.
+tables_dir:   tables         # CSV/JSON result tables.
+figure_format: svg           # one of: svg, png, pdf
 
-# --- Tokenization -----------------------------------------------------------
+# Tokenization
 max_len: 256
-text_fields: [name, description, example_code]
-label_field: bug_category
 
-# --- Cross-validation -------------------------------------------------------
+# Cross-validation
 n_folds: 5
-cv_seeds: [42, 7, 2024, 99, 123]
+cv_seeds: [42, 7, 2024, 99, 123]   # 5 seeds x 5 folds = 25 fold-runs per model
 
-# --- Optimization -----------------------------------------------------------
-num_epochs:       12
-learning_rate:    2.0e-5
-batch_size:       8
-eval_batch_size:  64
-weight_decay:     0.05
-warmup_ratio:     0.15
-dropout:          0.2
-val_split:        0.10
-label_smoothing:  0.05
+# Optimization
+num_epochs:    12
+learning_rate: 2.0e-5
+batch_size:    8
+eval_batch_size: 64
+weight_decay:  0.05
+warmup_ratio:  0.15
+dropout:       0.20
+val_split:     0.10
 
-# --- Early stopping ---------------------------------------------------------
+# Early stopping (on macro-F1)
 es_patience: 4
 
-# --- Misc -------------------------------------------------------------------
-use_fp16:      true
-logging_steps: 500
+# Loss
+label_smoothing: 0.05
 
-# --- Models compared (matches src.config.MODEL_REGISTRY) --------------------
-models:
-  - name: roberta-base
-    short: roberta
-    description: General-purpose text encoder (English only) - no code pretraining
-  - name: microsoft/codebert-base
-    short: codebert
-    description: Code + NL bimodal pretraining (CodeSearchNet)
-  - name: microsoft/graphcodebert-base
-    short: graphcodebert
-    description: Code + NL + data-flow graph pretraining
+# Misc
+use_fp16:       true
+logging_steps:  500
+label_field:    bug_category
+text_fields:    [name, description, example_code]

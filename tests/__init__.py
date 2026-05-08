@@ -1,1 +1,1 @@
-"""Test package for the bug-classification pipeline."""
+"""Test package for the Study I pipeline."""

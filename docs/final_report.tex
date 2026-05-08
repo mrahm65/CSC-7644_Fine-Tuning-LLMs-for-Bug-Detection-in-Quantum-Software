@@ -1,0 +1,45 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+\title{Fine-Tuning LLMs for Bug Detection in Quantum Software}
+\author{Md. Saidur Rahman\\CSC 7644 - Applied LLM Development}
+\date{May 2026}
+
+\begin{document}
+\maketitle
+
+\section*{Abstract}
+This report describes a controlled three-backbone comparison
+(\texttt{roberta-base}, \texttt{microsoft/codebert-base},
+\texttt{microsoft/graphcodebert-base}) for binary classification of
+software-engineering bug reports as classical or quantum. With identical
+architecture, parameter count, and 5-fold $\times$ 5-seed cross-validation
+protocol, the comparison isolates the effect of pretraining data on
+this downstream task.
+
+\section{Introduction}
+% Placeholder - replace with the full submitted report.
+
+\section{Methodology}
+See \texttt{docs/methodology.md} for the full protocol.
+
+\section{Results}
+
+\begin{tabular}{lccc}
+\hline
+Model & Accuracy & Macro-F1 & ROC-AUC \\
+\hline
+roberta       & $0.764 \pm 0.061$ & $0.754 \pm 0.066$ & $0.858 \pm 0.048$ \\
+codebert      & $0.767 \pm 0.057$ & $0.763 \pm 0.056$ & $0.855 \pm 0.044$ \\
+graphcodebert & $0.758 \pm 0.058$ & $0.756 \pm 0.058$ & $0.860 \pm 0.047$ \\
+\hline
+\end{tabular}
+
+\section{Conclusion}
+On 233 labeled samples, all three backbones perform statistically
+indistinguishably (paired Welch's $t$-test, $n=25$ folds per pair, every
+$p > 0.3$).
+
+\end{document}

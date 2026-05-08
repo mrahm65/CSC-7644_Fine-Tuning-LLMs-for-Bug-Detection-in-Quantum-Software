@@ -1,0 +1,10 @@
+metric,model_a,model_b,delta,t_statistic,p_value,significance
+accuracy,roberta,codebert,-0.002,-0.18,0.861,n.s.
+accuracy,codebert,graphcodebert,0.009,0.99,0.334,n.s.
+accuracy,roberta,graphcodebert,0.006,0.63,0.533,n.s.
+macro_f1,roberta,codebert,-0.009,-0.63,0.533,n.s.
+macro_f1,codebert,graphcodebert,0.007,0.81,0.428,n.s.
+macro_f1,roberta,graphcodebert,-0.002,-0.20,0.840,n.s.
+roc_auc,roberta,codebert,0.003,0.31,0.762,n.s.
+roc_auc,codebert,graphcodebert,-0.005,-0.42,0.679,n.s.
+roc_auc,roberta,graphcodebert,-0.002,-0.19,0.853,n.s.

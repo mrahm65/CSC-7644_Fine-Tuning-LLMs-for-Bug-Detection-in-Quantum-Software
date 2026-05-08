@@ -1,51 +1,21 @@
-"""Modular implementation of the classical vs. quantum bug-classification pipeline.
+"""Reusable Python modules for the Study I bug-classification pipeline.
 
-Top-level package for CSC 7644 final project.
+This package contains five flat modules that mirror the major concerns of
+the experiment:
 
-The lightweight modules (:mod:`src.config`, :mod:`src.data_loader`,
-:mod:`src.callbacks`, :mod:`src.evaluation`, :mod:`src.plots`) are
-re-exported eagerly. Symbols from :mod:`src.training` are exposed lazily
-via :func:`__getattr__` so that simply importing the package does not
-require torch / transformers - useful for tests and tooling that only
-need to read the configuration.
+* :mod:`src.data_utils`   - data loading, label filtering, text construction
+* :mod:`src.model_utils`  - tokenizer + sequence-classification model loading
+* :mod:`src.train_utils`  - training helpers (oversampling, class weights,
+                             early stopping)
+* :mod:`src.evaluate`     - metric computation
+* :mod:`src.plotting`     - matplotlib helpers for figures
 """
 
-from __future__ import annotations
-
-from src.config import (
-    ID2LABEL,
-    LABEL2ID,
-    LABEL_LIST,
-    MODEL_REGISTRY,
-    NUM_LABELS,
-    TrainingConfig,
-    get_default_config,
-)
-from src.data_loader import (
-    build_text,
-    get_text_label_arrays,
-    load_labeled_dataset,
-)
+from src.data_utils import build_input_text, load_dataset
+from src.evaluate import compute_metrics
 
 __all__ = [
-    "MODEL_REGISTRY",
-    "LABEL_LIST",
-    "LABEL2ID",
-    "ID2LABEL",
-    "NUM_LABELS",
-    "TrainingConfig",
-    "get_default_config",
-    "load_labeled_dataset",
-    "build_text",
-    "get_text_label_arrays",
-    "run_fold",
-    "run_full_experiment",
+    "build_input_text",
+    "load_dataset",
+    "compute_metrics",
 ]
-
-
-def __getattr__(name: str):
-    """Lazy passthrough for the torch-dependent training symbols."""
-    if name in {"run_fold", "run_full_experiment"}:
-        from src import training as _training  # local import keeps torch lazy
-        return getattr(_training, name)
-    raise AttributeError(f"module 'src' has no attribute {name!r}")

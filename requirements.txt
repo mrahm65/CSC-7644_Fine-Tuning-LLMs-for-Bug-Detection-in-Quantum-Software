@@ -1,23 +1,11 @@
-# Core ML / NLP stack — versions pinned to match the original notebook so
-# results reproduce on a fresh machine.
+torch
 transformers==4.44.2
 datasets==2.21.0
-accelerate==0.34.2
 scikit-learn==1.5.2
-
-# Numerical / dataframe / stats
-numpy>=1.24,<3
-pandas>=2.0,<3
-scipy>=1.11
-
-# Plotting
-matplotlib>=3.7,<4
-seaborn>=0.12,<1
-
-# PyTorch — install the CUDA build matching your GPU drivers from
-# https://pytorch.org/get-started/locally/. The plain `torch>=2` line below
-# will install the CPU build by default; override it as needed.
-torch>=2.0
-
-# Optional: load environment variables from a local .env file
-python-dotenv>=1.0
+pandas
+numpy
+matplotlib
+seaborn
+tqdm
+scipy
+jupyter

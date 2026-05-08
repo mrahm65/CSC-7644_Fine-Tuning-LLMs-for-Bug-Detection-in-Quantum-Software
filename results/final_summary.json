@@ -1,0 +1,35 @@
+{
+  "task": "classical_vs_quantum_binary",
+  "course": "CSC 7644 Applied LLM Development",
+  "n_samples": 233,
+  "class_distribution": {"classical": 134, "quantum": 99},
+  "cv_setup": "5-fold stratified x 5 seeds = 25 fold-runs per backbone (75 fold-runs total)",
+  "models": [
+    {
+      "model_short": "roberta",
+      "hf_identifier": "roberta-base",
+      "mean_accuracy": 0.764, "std_accuracy": 0.061,
+      "mean_macro_f1": 0.754, "std_macro_f1": 0.066,
+      "mean_roc_auc":  0.858, "std_roc_auc":  0.048,
+      "pooled_accuracy": 0.764, "pooled_macro_f1": 0.756
+    },
+    {
+      "model_short": "codebert",
+      "hf_identifier": "microsoft/codebert-base",
+      "mean_accuracy": 0.767, "std_accuracy": 0.057,
+      "mean_macro_f1": 0.763, "std_macro_f1": 0.056,
+      "mean_roc_auc":  0.855, "std_roc_auc":  0.044,
+      "pooled_accuracy": 0.767, "pooled_macro_f1": 0.764
+    },
+    {
+      "model_short": "graphcodebert",
+      "hf_identifier": "microsoft/graphcodebert-base",
+      "mean_accuracy": 0.758, "std_accuracy": 0.058,
+      "mean_macro_f1": 0.756, "std_macro_f1": 0.058,
+      "mean_roc_auc":  0.860, "std_roc_auc":  0.047,
+      "pooled_accuracy": 0.758, "pooled_macro_f1": 0.757
+    }
+  ],
+  "headline_finding": "All three backbones converge to ~76% accuracy with no statistically significant differences between them (paired t-tests, n=25 folds per pair, p > 0.3 for every metric).",
+  "implication": "On 233 labeled samples, code-aware pretraining (CodeBERT) and structure-aware pretraining (GraphCodeBERT) do not yield a measurable advantage over English-only RoBERTa for this binary task."
+}
