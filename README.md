@@ -1,6 +1,6 @@
 # Fine-Tuning LLMs for Bug Detection in Quantum Software
 
-## Project Title and Overview
+## Overview
 
 This repository contains my final project for **CSC 7644: Applied LLM Development** at Louisiana State University.
 
@@ -14,6 +14,8 @@ The goal of this project is to determine whether code-aware pre-training improve
 
 The comparison holds architecture and parameter count constant, so the main experimental variable is the model's pre-training corpus rather than model size or architecture.
 
+---
+
 ## Key Features / Capabilities
 
 - Classifies Qiskit bug reports as either **classical** or **quantum-specific**.
@@ -23,11 +25,13 @@ The comparison holds architecture and parameter count constant, so the main expe
 - Handles class imbalance using minority oversampling and class-weighted cross-entropy.
 - Uses label smoothing and macro-F1 early stopping for more stable training.
 - Avoids excessive checkpoint storage with a custom disk-safe early-stopping callback.
-- Computes accuracy, macro-F1, ROC-AUC, confusion matrices, and statistical tests.
+- Computes accuracy, macro-F1, ROC-AUC, confusion matrices, and paired statistical tests.
 - Generates reproducible tables and figures for the final report.
 - Provides an end-to-end Jupyter notebook for reproducing the full experiment.
 
-## Tech Stack and Architecture (High-Level)
+---
+
+## Tech Stack and Architecture
 
 ### Tech Stack
 
@@ -54,6 +58,27 @@ The comparison holds architecture and parameter count constant, so the main expe
 
 The project follows a supervised fine-tuning and evaluation pipeline:
 
+```text
+Bug-pattern dataset
+        |
+        v
+Canonical text construction
+        |
+        v
+Tokenizer for selected encoder backbone
+        |
+        v
+Transformer sequence-classification model
+        |
+        v
+Repeated stratified cross-validation
+        |
+        v
+Metrics, statistical tests, tables, and figures
+```
+
+The main workflow is:
+
 1. Bug-pattern records are loaded from the `data/` folder.
 2. Each record is converted into a canonical text input using fields such as bug name, description, and example code.
 3. The input text is tokenized using the selected HuggingFace tokenizer.
@@ -62,16 +87,21 @@ The project follows a supervised fine-tuning and evaluation pipeline:
 6. The model is evaluated using repeated stratified cross-validation.
 7. Metrics, predictions, tables, and figures are saved to `results/`, `tables/`, and `figures/`.
 
-The main components are:
+---
 
-- `data/` - input bug-pattern data
-- `src/data_utils.py` - data loading and input construction
-- `src/model_utils.py` - model and tokenizer loading
-- `src/train_utils.py` - training helpers, oversampling, weighted loss, and early stopping
-- `src/evaluate.py` - metric computation
-- `src/plotting.py` - figure generation
-- `notebooks/` - full end-to-end experimental notebook
-- `scripts/` - standalone scripts for training, evaluation, and figure generation
+## Key Results
+
+The best overall macro-F1 score was achieved by **CodeBERT**, while **GraphCodeBERT** achieved the highest ROC-AUC.
+
+| Model | Accuracy | Macro-F1 | ROC-AUC |
+|---|---:|---:|---:|
+| RoBERTa | 0.764 ± 0.061 | 0.754 ± 0.066 | 0.858 ± 0.048 |
+| CodeBERT | **0.767 ± 0.057** | **0.763 ± 0.056** | 0.855 ± 0.044 |
+| GraphCodeBERT | 0.758 ± 0.058 | 0.756 ± 0.058 | **0.860 ± 0.047** |
+
+These results suggest that code-aware pre-training provides a modest advantage for classical-vs-quantum bug classification, especially when measured by macro-F1.
+
+---
 
 ## Setup Instructions
 
@@ -87,14 +117,14 @@ The project assumes the following:
 
 The final experiments were run in a GPU environment. CPU execution is possible for lightweight tests, but full cross-validation training may take several hours.
 
-### Clone the Repository
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/mrahm65/CSC-7644_Fine-Tuning-LLMs-for-Bug-Detection-in-Quantum-Software.git
 cd CSC-7644_Fine-Tuning-LLMs-for-Bug-Detection-in-Quantum-Software
 ```
 
-### Create a Virtual Environment
+### 2. Create a Virtual Environment
 
 On macOS/Linux:
 
@@ -110,7 +140,7 @@ python -m venv .venv
 .venv\Scripts\activate
 ```
 
-### Install Dependencies
+### 3. Install Dependencies
 
 ```bash
 pip install --upgrade pip
@@ -124,7 +154,7 @@ pip install torch --index-url https://download.pytorch.org/whl/cu121
 pip install -r requirements.txt
 ```
 
-### Configure Environment Variables
+### 4. Configure Environment Variables
 
 Copy the example environment file:
 
@@ -134,27 +164,29 @@ cp .env.example .env
 
 The shipped pipeline does **not** require API keys. Optional environment variables are included only for future extensions.
 
-| Variable            | Purpose                                                                      |
-| ------------------- | ---------------------------------------------------------------------------- |
-| `OPENAI_API_KEY`    | Optional; only needed for downstream LLM-as-judge or prompt-based extensions |
-| `HUGGINGFACE_TOKEN` | Optional; only needed for gated HuggingFace models                           |
+| Variable | Purpose |
+|---|---|
+| `OPENAI_API_KEY` | Optional; only needed for downstream LLM-as-judge or prompt-based extensions |
+| `HUGGINGFACE_TOKEN` | Optional; only needed for gated HuggingFace models |
 
 The `.gitignore` file excludes `.env`, so real secrets should remain local and should not be committed.
 
-## Running the Application
+---
+
+## Running the Project
 
 ### Option 1: Run the Full Notebook
 
 The main end-to-end implementation is in:
 
 ```text
-notebooks/quantum-vs-classical-bug-prediction-v11.ipynb
+notebooks/quantum-vs-classical-bug-detection-Final.ipynb
 ```
 
 Start Jupyter with:
 
 ```bash
-jupyter notebook notebooks/quantum-vs-classical-bug-prediction-v11.ipynb
+jupyter notebook notebooks/quantum-vs-classical-bug-detection-Final.ipynb
 ```
 
 The notebook performs:
@@ -190,6 +222,12 @@ Regenerate report figures:
 python scripts/generate_figures.py
 ```
 
+Generate sample outputs without full model training:
+
+```bash
+python scripts/generate_sample_outputs.py
+```
+
 ### Run Tests
 
 ```bash
@@ -198,70 +236,49 @@ TMPDIR=/tmp pytest tests/ -q
 
 The lightweight tests check data-loading and metric-computation utilities without requiring full model training.
 
+---
+
 ## Repository Organization
 
 The repository is organized so a grader can quickly locate the implementation, data, documentation, results, and evaluation artifacts.
 
 ```text
 CSC-7644_Fine-Tuning-LLMs-for-Bug-Detection-in-Quantum-Software/
-|
-|-- README.md
-|-- requirements.txt
-|-- .gitignore
-|-- .env.example
-|-- LICENSE
-|-- main.py
-|-- pyproject.toml
-|
-|-- data/
-|-- docs/
-|-- figures/
-|-- notebooks/
-|-- scripts/
-|-- src/
-|-- tables/
-|-- tests/
-`-- results/
+├── README.md                          # Main project documentation, setup, usage, results, and citations
+├── requirements.txt                   # Python dependencies required to run the project
+├── pyproject.toml                     # Python project metadata and optional tooling configuration
+├── main.py                            # Lightweight project entry point
+├── config.example.yaml                # Example configuration file for reproducible runs
+├── .env.example                       # Template for optional environment variables
+├── .gitignore                         # Excludes caches, local environments, checkpoints, and secrets
+├── LICENSE                            # MIT license
+├── data/                              # Bug-pattern dataset files
+│   └── bug_patterns_labeled.json      # Labeled classical/quantum bug-pattern dataset
+├── docs/                              # Project documentation and report-related materials
+│   └── Rahman_MdSaidur_quadchart.pdf  # Project quad chart
+├── notebooks/                         # End-to-end Jupyter/Kaggle notebook and notebook notes
+│   ├── README.md                      # Notes describing the notebook folder
+│   └── quantum-vs-classical-bug-detection-Final.ipynb
+├── scripts/                           # Standalone scripts for training, evaluation, and figure generation
+│   ├── __init__.py                    # Marks scripts as a Python package
+│   ├── generate_figures.py            # Regenerates report-ready figures
+│   ├── generate_sample_outputs.py     # Creates sample outputs without full model training
+│   ├── run_evaluation.py              # Reads saved results and prints evaluation summaries
+│   └── run_training.py                # Runs the full training and cross-validation pipeline
+├── src/                               # Reusable Python source modules
+│   ├── __init__.py                    # Marks src as a Python package
+│   ├── data_utils.py                  # Data preprocessing and canonical text construction
+│   ├── evaluate.py                    # Accuracy, macro-F1, ROC-AUC, and related metric computation
+│   ├── model_utils.py                 # HuggingFace tokenizer/model loading utilities
+│   ├── plotting.py                    # Figure-generation utilities
+│   └── train_utils.py                 # Training helpers, class weighting, oversampling, and early stopping
+├── figures/                           # Generated plots and visualizations
+├── results/                           # Saved model outputs, fold metrics, and predictions
+├── tables/                            # Exported result tables and statistical summaries
+└── tests/                             # Unit tests and validation scripts
 ```
 
-### Root Files
-
-| File               | Description                                                                             |
-| ------------------ | --------------------------------------------------------------------------------------- |
-| `README.md`        | Main project documentation, setup instructions, usage guide, results, and citations     |
-| `requirements.txt` | Python dependencies required to run the project                                         |
-| `.gitignore`       | Prevents local environments, cache files, checkpoints, and secrets from being committed |
-| `.env.example`     | Template for optional environment variables                                             |
-| `LICENSE`          | Repository license                                                                      |
-| `main.py`          | Lightweight entry point that prints basic project usage information                     |
-| `pyproject.toml`   | Project metadata and optional formatting/testing configuration                          |
-
-### Main Directories
-
-| Directory    | Description                                                                                          |
-| ------------ | ---------------------------------------------------------------------------------------------------- |
-| `data/`      | Bug-pattern dataset files and sample data for demonstration                                          |
-| `docs/`      | Final report, LaTeX source, project summary, methodology notes, and architecture notes               |
-| `figures/`   | Report-ready figures such as dataset distribution, workflow diagram, confusion matrix, and ROC curve |
-| `notebooks/` | Main Jupyter notebook containing the full end-to-end experimental pipeline                           |
-| `scripts/`   | Standalone scripts for training, evaluation, and figure generation                                   |
-| `src/`       | Reusable Python modules for data loading, model utilities, training, evaluation, and plotting        |
-| `tables/`    | CSV tables containing summary metrics, statistical tests, and model comparisons                      |
-| `results/`   | Prediction files, fold-level metrics, and final summary outputs                                      |
-| `tests/`     | Lightweight pytest tests for core utility functions                                                  |
-
-### Important Source Files
-
-| File                          | Purpose                                                                               |
-| ----------------------------- | ------------------------------------------------------------------------------------- |
-| `src/data_utils.py`           | Loads bug-pattern data and builds canonical text inputs                               |
-| `src/model_utils.py`          | Loads HuggingFace tokenizers and sequence-classification models                       |
-| `src/train_utils.py`          | Implements training helpers, class weighting, oversampling, and manual early stopping |
-| `src/evaluate.py`             | Computes accuracy, macro-F1, ROC-AUC, and related evaluation metrics                  |
-| `src/plotting.py`             | Generates figures used in the final report                                            |
-| `scripts/run_training.py`     | Runs the full training and cross-validation pipeline                                  |
-| `scripts/run_evaluation.py`   | Loads saved outputs and computes/prints final evaluation summaries                    |
-| `scripts/generate_figures.py` | Regenerates report-ready figures from saved tables/results                            |
+---
 
 ## Attributions and Citations
 
@@ -270,6 +287,11 @@ This project uses the following external tools, models, and research resources:
 - HuggingFace Transformers: <https://huggingface.co/docs/transformers>
 - PyTorch: <https://pytorch.org/>
 - scikit-learn: <https://scikit-learn.org/>
+- SciPy: <https://scipy.org/>
+- pandas: <https://pandas.pydata.org/>
+- NumPy: <https://numpy.org/>
+- Matplotlib: <https://matplotlib.org/>
+- Seaborn: <https://seaborn.pydata.org/>
 - RoBERTa: Liu et al., *RoBERTa: A Robustly Optimized BERT Pretraining Approach*, 2019.
 - CodeBERT: Feng et al., *CodeBERT: A Pre-Trained Model for Programming and Natural Languages*, EMNLP 2020.
 - GraphCodeBERT: Guo et al., *GraphCodeBERT: Pre-training Code Representations with Data Flow*, ICLR 2021.
@@ -278,10 +300,12 @@ This project uses the following external tools, models, and research resources:
 
 No external code was copied verbatim. The custom `ManualEarlyStoppingCallback` in `src/train_utils.py` was implemented as a simplified, disk-safe adaptation inspired by HuggingFace's early-stopping behavior. This was necessary because standard checkpoint-based early stopping exceeded the available disk quota during repeated cross-validation.
 
+---
+
 ## Author
 
-**Md Saidur Rahman**
-Department of Computer Science
-Louisiana State University
-CSC 7644: Applied LLM Development
+**Md Saidur Rahman**  
+Department of Computer Science  
+Louisiana State University  
+CSC 7644: Applied LLM Development  
 Email: `mrahm65@lsu.edu`
