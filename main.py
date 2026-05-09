@@ -4,7 +4,7 @@
 def main():
     """Print project usage instructions."""
     print("Fine-Tuning LLMs for Bug Detection in Quantum Software")
-    print("Main notebook: notebooks/quantum-vs-classical-bug-prediction-v11.ipynb")
+    print("Main notebook: notebooks/quantum-vs-classical-bug-detection-Final.ipynb")
     print("Install dependencies with: pip install -r requirements.txt")
     print()
     print("Common commands:")
