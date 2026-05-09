@@ -9,3 +9,5 @@ seaborn
 tqdm
 scipy
 jupyter
+accelerate==0.34.2
+python-dotenv>=1.0
