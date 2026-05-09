@@ -255,9 +255,9 @@ CSC-7644_Fine-Tuning-LLMs-for-Bug-Detection-in-Quantum-Software/
 ├── data/                              # Bug-pattern dataset files
 │   ├── README.md                      # Description of dataset files and labels
 │   ├── bug_patterns.json              # Original/main bug-pattern dataset
-│   ├── bug_patterns_categorized.json  # Categorized bug-pattern dataset
+│   ├── bug_patterns_categorized.json  # Final labeled dataset used by the notebook
 │   ├── bug_patterns_classical.json    # Classical bug-pattern subset
-│   ├── bug_patterns_labeled.json      # Labeled classical/quantum bug-pattern dataset
+│   ├── bug_patterns_labeled.json      # Labeled/intermediate classical-quantum dataset
 │   ├── bug_patterns_quantum.json      # Quantum-specific bug-pattern subset
 │   └── sample_data.json               # Small sample dataset for testing/demo use
 ├── docs/                              # Project documentation and report-related materials
@@ -266,7 +266,6 @@ CSC-7644_Fine-Tuning-LLMs-for-Bug-Detection-in-Quantum-Software/
 │   ├── Rahman_MdSaidur_MidtermProposal.pdf # Midterm proposal PDF
 │   ├── Rahman_MdSaidur_quadchart.pdf  # Project quad chart
 │   ├── architecture.md                # High-level architecture notes
-│   ├── final_report.tex               # LaTeX source for the final report
 │   ├── methodology.md                 # Methodology notes
 │   ├── project_summary.md             # Short project summary
 │   └── results.md                     # Results notes
@@ -274,10 +273,14 @@ CSC-7644_Fine-Tuning-LLMs-for-Bug-Detection-in-Quantum-Software/
 │   ├── README.md                      # Notes describing the notebook folder
 │   └── quantum-vs-classical-bug-detection-Final.ipynb
 ├── scripts/                           # Standalone scripts for training, evaluation, and figure generation
+│   ├── README.md                      # Notes describing available scripts
 │   ├── __init__.py                    # Marks scripts as a Python package
 │   ├── generate_figures.py            # Regenerates report-ready figures
+│   ├── generate_sample_artifacts.py   # Generates sample intermediate/demo artifacts
 │   ├── generate_sample_outputs.py     # Creates sample outputs without full model training
 │   ├── run_evaluation.py              # Reads saved results and prints evaluation summaries
+│   ├── run_experiment.sh              # Shell helper for running experiment workflow
+│   ├── run_study_i_codebert.py        # Legacy CodeBERT study script kept for reference
 │   └── run_training.py                # Runs the full training and cross-validation pipeline
 ├── src/                               # Reusable Python source modules
 │   ├── __init__.py                    # Marks src as a Python package
@@ -291,8 +294,6 @@ CSC-7644_Fine-Tuning-LLMs-for-Bug-Detection-in-Quantum-Software/
 ├── tables/                            # Exported result tables and statistical summaries
 └── tests/                             # Unit tests and validation scripts
 ```
-
----
 
 ## Code Quality
 
